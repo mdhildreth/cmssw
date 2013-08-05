@@ -272,7 +272,7 @@ void PileupInformation::produce(edm::Event &event, const edm::EventSetup & setup
       EncodedEventId oldEventId;
 
       edm::Handle<CrossingFrame<SimVertex> > cfSimVertexes;
-      if( !(event.getByLabel("mix", simHitLabel_, cfSimVertexes)) ) {
+      if(event.getByLabel("mix", simHitLabel_, cfSimVertexes) ) {
 
 	// Create a mix collection from one simvertex collection  
 	simVertexes_ = std::auto_ptr<MixCollection<SimVertex> >( new MixCollection<SimVertex>(cfSimVertexes.product()) );

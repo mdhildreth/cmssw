@@ -1,0 +1,14 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="FWCore/Utilities"/>
+<use   name="FWCore/ServiceRegistry"/>
+<use   name="DataFormats/Common"/>
+<use   name="DataFormats/Provenance"/>
+<use   name="DataFormats/VertexReco"/>
+<use   name="CommonTools/UtilAlgos"/>
+<use   name="SimDataFormats/PileupSummaryInfo"/>
+<use   name="PhysicsTools/Utilities"/>
+<use   name="rootrflx"/>
+<use   name="roofit"/>
+<use   name="boost"/>
+<flags EDM_PLUGIN="1"/>

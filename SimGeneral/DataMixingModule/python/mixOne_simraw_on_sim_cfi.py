@@ -37,7 +37,6 @@ hcalDigis = EventFilter.HcalRawToDigi.HcalRawToDigi_cfi.hcalDigis.clone()
 muonDTDigis = EventFilter.DTRawToDigi.dtunpacker_cfi.muonDTDigis.clone()
 
 #muonRPCDigis = EventFilter.RPCRawToDigi.rpcUnpacker_cfi.rpcunpacker.clone()
-
 #castorDigis = EventFilter.CastorRawToDigi.CastorRawToDigi_cfi.castorDigis.clone( FEDs = cms.untracked.vint32(690,691,692) )
 
 siStripDigis = EventFilter.SiStripRawToDigi.SiStripDigis_cfi.siStripDigis.clone()
@@ -59,7 +58,6 @@ hcalSimBlock.HcalPreMixStage2 = cms.bool(True)
 mixData = cms.EDProducer("DataMixingModule",
           hcalSimBlock,
           SiStripSimBlock,
-<<<<<<< HEAD
           ecal_digi_parameters,
           apd_sim_parameters,
           ecal_electronics_sim,
@@ -67,8 +65,6 @@ mixData = cms.EDProducer("DataMixingModule",
           ecal_sim_parameter_map,
           ecal_notCont_sim,
           es_electronics_sim,
-=======
->>>>>>> 3cadeda... Final Changes for SiStrip noise treatment
     input = cms.SecSource("PoolSource",
         producers = cms.VPSet(cms.convertToVPSet(
                                              ecalDigis = ecalDigis,
@@ -104,11 +100,7 @@ mixData = cms.EDProducer("DataMixingModule",
     # Use digis?               
     EcalMergeType = cms.string('Digis'),  # set to "Digis" to merge digis
     HcalMergeType = cms.string('Digis'),
-<<<<<<< HEAD
     HcalDigiMerge = cms.string('FullProd'), #use sim hits for signal
-=======
-    HcalDigiMerge = cms.string('Prod'), #use sim hits for signal
->>>>>>> 3cadeda... Final Changes for SiStrip noise treatment
     addMCDigiNoise = cms.untracked.bool(True),
     #
     # Input Specifications:

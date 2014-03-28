@@ -66,7 +66,8 @@ namespace edm
 
     addMCDigiNoise_ = false;
 
-    addMCDigiNoise_ = ps.getUntrackedParameter<bool>("addMCDigiNoise");  // for Sim on Sim 
+    addMCDigiNoise_ = ps.getUntrackedParameter<bool>("addMCDigiNoise");  // for Sim on Sim mixing
+
     // Put Fast Sim Sequences here for Simplification: Fewer options!
 
     if(DoFastSim_) {

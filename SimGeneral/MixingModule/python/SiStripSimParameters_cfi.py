@@ -85,4 +85,3 @@ SiStripSimBlock = cms.PSet(
     TOFCutForPeak              = cms.double(100.0),
     Inefficiency               = cms.double(0.0)
 )
-

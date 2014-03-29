@@ -309,6 +309,7 @@ namespace edm
 	       
 
   void DataMixingModule::initializeEvent(const edm::Event &e, const edm::EventSetup& ES) { 
+
     if( addMCDigiNoise_ ) {
       SiStripMCDigiWorker_->initializeEvent( e, ES );
       EcalDigiWorkerProd_->initializeEvent( e, ES );
@@ -323,6 +324,17 @@ namespace edm
     if( addMCDigiNoise_ ) {
       EcalDigiWorkerProd_->beginRun( ES );
       HcalDigiWorkerProd_->beginRun( run, ES );
+    }
+    if( addMCDigiNoise_ && MergeHcalDigisProd_) {
+      HcalDigiWorkerProd_->initializeEvent( e, ES );
+    }
+  }
+
+  void DataMixingModule::beginRun(edm::Run const& run, const edm::EventSetup& ES) { 
+    std::cout << " DM calling begin run " << std::endl;
+    BMixingModule::beginRun( run, ES);
+    if( addMCDigiNoise_ && MergeHcalDigisProd_) {
+      HcalDigiWorkerProd_->beginRun( ES );
     }
   }
 

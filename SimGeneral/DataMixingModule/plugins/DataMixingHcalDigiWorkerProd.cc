@@ -57,6 +57,8 @@ namespace edm {
     myHcalDigitizer_->setHONoiseSignalGenerator( & theHOSignalGenerator );
     myHcalDigitizer_->setZDCNoiseSignalGenerator( & theZDCSignalGenerator );
 
+    std::cout << " IN HCAL constructor " << std::endl;
+
   }
 	       
   // Virtual destructor needed.

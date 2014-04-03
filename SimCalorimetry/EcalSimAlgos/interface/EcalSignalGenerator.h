@@ -138,7 +138,6 @@ public:
      {
       if( theEvent->getByToken(tok_, pDigis) ) {
         digis = pDigis.product(); // get a ptr to the product
-        //LogTrace("EcalSignalGenerator") << "total # digis  for "  << theInputTag << " " <<  digis->size();
       }
       else
       {
@@ -227,6 +226,7 @@ private:
   /// these fields are set in initializeEvent()
   const edm::Event * theEvent;
   const edm::EventPrincipal * theEventPrincipal;
+
   edm::ESHandle<EcalGainRatios> grHandle; 
   edm::ESHandle<EcalIntercalibConstantsMC> pIcal;
   edm::ESHandle<EcalADCToGeVConstant> pAgc;

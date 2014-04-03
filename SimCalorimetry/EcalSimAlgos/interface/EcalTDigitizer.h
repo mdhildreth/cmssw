@@ -12,6 +12,7 @@
 #include "CalibFormats/CaloObjects/interface/CaloTSamplesBase.h"
 #include "SimCalorimetry/EcalSimAlgos/interface/EcalBaseSignalGenerator.h"
 
+
 class EcalHitResponse ;
 class EcalBaseSignalGenerator;
 
@@ -63,8 +64,8 @@ class EcalTDigitizer
       EcalHitResponse* m_hitResponse    ;
       ElectronicsSim*  m_electronicsSim ;
       bool             m_addNoise       ;
-      EcalBaseSignalGenerator * theNoiseSignalGenerator;
 
+      EcalBaseSignalGenerator * theNoiseSignalGenerator;
 
 };
 

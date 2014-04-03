@@ -817,7 +817,6 @@ EcalDigiProducer::updateGeometry()
    }
 }
 
-
 CLHEP::HepRandomEngine* EcalDigiProducer::randomEngine(edm::StreamID const& streamID) {
   unsigned int index = streamID.value();
   if(index >= randomEngines_.size()) {

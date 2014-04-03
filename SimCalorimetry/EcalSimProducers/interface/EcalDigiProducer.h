@@ -74,6 +74,10 @@ class EcalDigiProducer : public DigiAccumulatorMixMod {
       void setEENoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator);
       void setESNoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator);
 
+      void setEBNoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator);
+      void setEENoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator);
+      void setESNoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator);
+
    private:
 
       virtual void cacheEBDigis( const EBDigiCollection* ebDigiPtr ) const { }

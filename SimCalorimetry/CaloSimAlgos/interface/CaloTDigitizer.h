@@ -92,8 +92,6 @@ public:
     int nDigisExpected = addNoise_ ? theDetIds->size() : theHitResponse->nSignals();
     output.reserve(nDigisExpected);
 
-    //std::cout << " In CaloTDigitizer, nDigisExpected " << nDigisExpected << std::endl;
-
     // make a raw digi for evey cell
     for(std::vector<DetId>::const_iterator idItr = theDetIds->begin();
         idItr != theDetIds->end(); ++idItr)
@@ -109,6 +107,7 @@ public:
          needToDeleteSignal = true;
        }
        if(analogSignal != 0) { 
+
          theElectronicsSim->analogToDigital(engine, *analogSignal , digi);
          output.push_back(std::move(digi));
          if(needToDeleteSignal) delete analogSignal;

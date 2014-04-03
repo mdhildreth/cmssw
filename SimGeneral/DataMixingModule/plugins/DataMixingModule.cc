@@ -45,6 +45,11 @@ namespace edm
     tok_ee_ = consumes<EEDigitizerTraits::DigiCollection>(EEPileInputTag_);
     tok_es_ = consumes<ESDigitizerTraits::DigiCollection>(ESPileInputTag_);
 
+    // prepare for data access in DataMixingEcalDigiWorkerProd
+    tok_eb_ = consumes<EBDigitizerTraits::DigiCollection>(EBPileInputTag_);
+    tok_ee_ = consumes<EEDigitizerTraits::DigiCollection>(EEPileInputTag_);
+    tok_es_ = consumes<ESDigitizerTraits::DigiCollection>(ESPileInputTag_);
+
     // prepare for data access in DataMixingHcalDigiWorkerProd
     tok_hbhe_ = consumes<HBHEDigitizerTraits::DigiCollection>(HBHEPileInputTag_);
     tok_ho_ = consumes<HODigitizerTraits::DigiCollection>(HOPileInputTag_);
@@ -333,7 +338,8 @@ namespace edm
   void DataMixingModule::beginRun(edm::Run const& run, const edm::EventSetup& ES) { 
     std::cout << " DM calling begin run " << std::endl;
     BMixingModule::beginRun( run, ES);
-    if( addMCDigiNoise_ && MergeHcalDigisProd_) {
+    if( addMCDigiNoise_ ) {
+      EcalDigiWorkerProd_->beginRun( ES );
       HcalDigiWorkerProd_->beginRun( ES );
     }
   }

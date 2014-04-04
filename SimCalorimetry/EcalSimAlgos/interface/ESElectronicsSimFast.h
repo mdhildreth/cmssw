@@ -6,6 +6,7 @@
 #include "DataFormats/EcalDigi/interface/ESSample.h"
 #include "CondFormats/ESObjects/interface/ESPedestals.h"
 #include "CondFormats/ESObjects/interface/ESIntercalibConstants.h"
+#include "SimCalorimetry/EcalSimAlgos/interface/EcalBaseSignalGenerator.h"
 
 #include <vector>
 

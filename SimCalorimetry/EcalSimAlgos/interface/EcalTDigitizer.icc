@@ -42,7 +42,6 @@ EcalTDigitizer<Traits>::initializeHits() {
 template <class Traits>
 void
 EcalTDigitizer<Traits>::setNoiseSignalGenerator(EcalBaseSignalGenerator* noiseSignalGenerator) {
-
    theNoiseSignalGenerator = noiseSignalGenerator;
 }
 

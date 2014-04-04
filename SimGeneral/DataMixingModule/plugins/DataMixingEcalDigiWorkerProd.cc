@@ -45,7 +45,7 @@ namespace edm {
     myEcalDigitizer_ = new EcalDigiProducer( ps , iC);
     myEcalDigitizer_->setEBNoiseSignalGenerator( & theEBSignalGenerator );
     myEcalDigitizer_->setEENoiseSignalGenerator( & theEESignalGenerator );
-    myEcalDigitizer_->setESNoiseSignalGenerator( & theESSignalGenerator );
+    //myEcalDigitizer_->setESNoiseSignalGenerator( & theESSignalGenerator );
 
   }
 	       
@@ -75,13 +75,13 @@ namespace edm {
 
     theEBSignalGenerator.initializeEvent(ep, &ES);
     theEESignalGenerator.initializeEvent(ep, &ES);
-    theESSignalGenerator.initializeEvent(ep, &ES);
+    //theESSignalGenerator.initializeEvent(ep, &ES);
 
     // add noise signals using incoming digis
 
     theEBSignalGenerator.fill(mcc);
     theEESignalGenerator.fill(mcc);
-    theESSignalGenerator.fill(mcc);
+    //theESSignalGenerator.fill(mcc);
   }
 
   void DataMixingEcalDigiWorkerProd::putEcal(edm::Event &e,const edm::EventSetup& ES) {

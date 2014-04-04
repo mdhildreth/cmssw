@@ -88,11 +88,10 @@ namespace edm
       const double m_peToABarrel;
       const double m_peToAEndcap;
 
-
       EcalDigiProducer* myEcalDigitizer_;
       EBSignalGenerator theEBSignalGenerator;
       EESignalGenerator theEESignalGenerator;
-      ESSignalGenerator theESSignalGenerator;
+      //      ESSignalGenerator theESSignalGenerator;
 
       std::string label_;
 

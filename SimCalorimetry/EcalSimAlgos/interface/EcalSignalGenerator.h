@@ -75,6 +75,7 @@ public:
   {
     theEvent = event;
     eventSetup->get<EcalGainRatiosRcd>().get(grHandle); // find the gains
+
     // Ecal Intercalibration Constants
     eventSetup->get<EcalIntercalibConstantsMCRcd>().get( pIcal ) ;
     ical = pIcal.product();
@@ -186,7 +187,6 @@ private:
   virtual void fillNoiseSignals() override {}
   virtual void fillNoiseSignals(CLHEP::HepRandomEngine*) override {}
 
-
   // much of this stolen from EcalSimAlgos/EcalCoder
 
   enum { NBITS         =   12 , // number of available bits
@@ -222,6 +222,20 @@ private:
      return detId.subdetId() == EcalBarrel ? m_peToABarrel : m_peToAEndcap ;
   }
 
+  const std::vector<float>  GetGainRatios(const DetId& detid) {
+
+    std::vector<float> gainRatios(3);
+    // get gain ratios  
+    EcalMGPAGainRatio theRatio= (*grHandle)[detid];
+    
+    
+    gainRatios[0] = 1.;
+    gainRatios[1] = theRatio.gain12Over6();
+    gainRatios[2] = theRatio.gain6Over1()  * theRatio.gain12Over6();
+
+    return gainRatios;
+  }
+
     
   /// these fields are set in initializeEvent()
   const edm::Event * theEvent;
@@ -230,6 +244,7 @@ private:
   edm::ESHandle<EcalGainRatios> grHandle; 
   edm::ESHandle<EcalIntercalibConstantsMC> pIcal;
   edm::ESHandle<EcalADCToGeVConstant> pAgc;
+
  /// these come from the ParameterSet
   edm::InputTag theInputTag;
   edm::EDGetTokenT<COLLECTION> tok_;
@@ -262,7 +277,7 @@ private:
 
 typedef EcalSignalGenerator<EBDigitizerTraits>   EBSignalGenerator;
 typedef EcalSignalGenerator<EEDigitizerTraits>   EESignalGenerator;
-typedef EcalSignalGenerator<ESDigitizerTraits>   ESSignalGenerator;
+//typedef EcalSignalGenerator<ESDigitizerTraits>   ESSignalGenerator;
 
 #endif
 

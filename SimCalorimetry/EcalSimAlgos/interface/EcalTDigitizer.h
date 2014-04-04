@@ -12,7 +12,6 @@
 #include "CalibFormats/CaloObjects/interface/CaloTSamplesBase.h"
 #include "SimCalorimetry/EcalSimAlgos/interface/EcalBaseSignalGenerator.h"
 
-
 class EcalHitResponse ;
 class EcalBaseSignalGenerator;
 

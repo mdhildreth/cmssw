@@ -130,6 +130,7 @@ namespace edm
       std::map<unsigned int, size_t> firstChannelsWithSignal;
       std::map<unsigned int, size_t> lastChannelsWithSignal;
 
+      //----------------------------
 
       class StrictWeakOrdering{
       public:

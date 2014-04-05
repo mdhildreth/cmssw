@@ -140,6 +140,8 @@ namespace edm
 	LogDebug("DataMixingSiStripMCDigiWorker")  << "Processing DetID " << DSViter->id;
 #endif
 
+	std::cout << "SIStripDM Sig: Processing DetID " << DSViter->id << std::endl;
+	
 	LocalMap.clear();
 	LocalMap.reserve((DSViter->data).size());
 	LocalMap.insert(LocalMap.end(),(DSViter->data).begin(),(DSViter->data).end());	
@@ -178,6 +180,8 @@ namespace edm
 #ifdef DEBUG
 	LogDebug("DataMixingSiStripMCDigiWorker")  << "Pileups: Processing DetID " << DSViter->id;
 #endif
+
+	std::cout << "SIStripDM PU: Processing DetID " << DSViter->id << std::endl;
 
 	// find correct local map (or new one) for this detector ID
 
@@ -294,6 +298,7 @@ namespace edm
     // This section stolen from SiStripDigitizerAlgorithm
     // must loop over all detIds in the tracker to get all of the noise added properly.
     for(TrackingGeometry::DetUnitContainer::const_iterator iu = pDD->detUnits().begin(); iu != pDD->detUnits().end(); iu ++){
+
       const StripGeomDetUnit* sgd = dynamic_cast<const StripGeomDetUnit*>((*iu));
       if (sgd != 0){
 
@@ -355,6 +360,7 @@ namespace edm
 	
 	DigitalVecType digis;
 	theSiZeroSuppress->suppress(theSiDigitalConverter->convert(detAmpl, gainHandle, detID), digis, detID,noiseHandle,thresholdHandle);
+
 
 	SSD.data = digis;
 	//	if(digis.size() > 0) {

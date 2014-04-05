@@ -7,10 +7,11 @@ from Configuration.StandardSequences.DigiNZS_cff import *
 
 # modifications to the digi sequences defined above (DigiNZS imports the central Digi_cff)
 
-simMuonRPCDigis.doBkgNoise = False
-simMuonCSCDigis.strips.doNoise = False
-simMuonCSCDigis.wires.doNoise = False
-simMuonDTDigis.onlyMuHits = True
+#simMuonCSCDigis.strips.doNoise = False
+#simMuonCSCDigis.wires.doNoise = False
+#simMuonDTDigis.onlyMuHits = True
+#simMuonRPCDigis.Noise = False
+
 
 # Note: the other noise is turned of in the DigitizersNoNoise sequence defined in the MixingModule
 # because the MM holds/controls all of the other digitizers.

@@ -122,7 +122,6 @@ void CaloHitResponse::add( const PCaloHit& hit, CLHEP::HepRandomEngine* engine )
        }
     }
 
-
     if( keep ) add(signal);
   }
 }

@@ -135,6 +135,8 @@ private:
     CaloSamples result;
     coder.adc2fC(digi, result);
 
+    fC2pe(result);
+
     // first, check if there was an overflow in this fake digi:
     bool overflow = false;
     // find and list them

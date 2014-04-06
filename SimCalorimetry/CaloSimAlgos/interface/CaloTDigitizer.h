@@ -78,7 +78,6 @@ public:
 
   void run(DigiCollection & output, CLHEP::HepRandomEngine* engine) {
     theHitResponse->finalizeHits(engine);
-
     //std::cout << " In CaloTDigitizer, after finalize hits " << std::endl;
 
     assert(theDetIds->size() != 0);

@@ -1,7 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
 # fragment to turn off ZS in Hcal:
-
 #from Configuration.StandardSequences.Digi_cff import *
 from Configuration.StandardSequences.DigiNZS_cff import *
 

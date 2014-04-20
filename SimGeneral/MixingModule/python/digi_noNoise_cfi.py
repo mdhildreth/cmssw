@@ -40,4 +40,3 @@ theDigitizersNoNoise.pixel.addNoisyPixels = cms.bool(False)
 theDigitizersNoNoise.strip.Noise = cms.bool(False)
 theDigitizersNoNoise.ecal.EcalPreMixStage1 = cms.bool(True)
 theDigitizersNoNoise.hcal.HcalPreMixStage1 = cms.bool(True)
-

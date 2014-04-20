@@ -72,7 +72,7 @@ mixData = cms.EDProducer("DataMixingModule",
                                              hcalDigis = hcalDigis,
                                              muonDTDigis = muonDTDigis,
                                              #muonRPCDigis = muonRPCDigis,
-                                             #muonCSCDigis = muonCSCDigis,
+                                             muonCSCDigis = muonCSCDigis,
                                              siStripDigis = siStripDigis,
                                              siPixelDigis = siPixelDigis,
                              )),
@@ -154,7 +154,11 @@ mixData = cms.EDProducer("DataMixingModule",
     #
     EBPileInputTag = cms.InputTag("ecalDigis","ebDigis","@MIXING"),
     EEPileInputTag = cms.InputTag("ecalDigis","eeDigis","@MIXING"),
+<<<<<<< HEAD
     ESPileInputTag = cms.InputTag("ecalPreshowerDigis","","@MIXING"),
+=======
+    ESPileInputTag = cms.InputTag("esRawToDigi","","@MIXING"),
+>>>>>>> ec2663d... Finish EB work
     HBHEPileInputTag = cms.InputTag("hcalDigis","","@MIXING"),
     HOPileInputTag   = cms.InputTag("hcalDigis","","@MIXING"),
     HFPileInputTag   = cms.InputTag("hcalDigis","","@MIXING"),
@@ -174,12 +178,18 @@ mixData = cms.EDProducer("DataMixingModule",
     DTPileInputTag        = cms.InputTag("muonDTDigis","","@MIXING"),
     RPCPileInputTag       = cms.InputTag("simMuonRPCDigis",""),
 #    RPCPileInputTag       = cms.InputTag("muonRPCDigis","","@MIXING"),  # use MC digis...
+<<<<<<< HEAD
     CSCWirePileInputTag   = cms.InputTag("simMuonCSCDigis","MuonCSCWireDigi"),
     CSCStripPileInputTag  = cms.InputTag("simMuonCSCDigis","MuonCSCStripDigi"),
     CSCCompPileInputTag   = cms.InputTag("simMuonCSCDigis","MuonCSCComparatorDigi"), 
 #    CSCWirePileInputTag   = cms.InputTag("muonCSCDigis","MuonCSCWireDigi","@MIXING"),
 #    CSCStripPileInputTag  = cms.InputTag("muonCSCDigis","MuonCSCStripDigi","@MIXING"),
 #    CSCCompPileInputTag   = cms.InputTag("muonCSCDigis","MuonCSCComparatorDigi","@MIXING"),
+=======
+    CSCWirePileInputTag   = cms.InputTag("muonCSCDigis","MuonCSCWireDigi","@MIXING"),
+    CSCStripPileInputTag  = cms.InputTag("muonCSCDigis","MuonCSCStripDigi","@MIXING"),
+    CSCCompPileInputTag   = cms.InputTag("muonCSCDigis","MuonCSCComparatorDigi","@MIXING"),
+>>>>>>> ec2663d... Finish EB work
                    #
     #
     #  Outputs

@@ -77,7 +77,6 @@ namespace edm {
     theEESignalGenerator.initializeEvent(ep, &ES);
     //theESSignalGenerator.initializeEvent(ep, &ES);
 
-    // add noise signals using incoming digis
 
     theEBSignalGenerator.fill(mcc);
     theEESignalGenerator.fill(mcc);

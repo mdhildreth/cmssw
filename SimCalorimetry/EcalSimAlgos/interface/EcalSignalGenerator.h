@@ -75,7 +75,6 @@ public:
   {
     theEvent = event;
     eventSetup->get<EcalGainRatiosRcd>().get(grHandle); // find the gains
-
     // Ecal Intercalibration Constants
     eventSetup->get<EcalIntercalibConstantsMCRcd>().get( pIcal ) ;
     ical = pIcal.product();
@@ -222,20 +221,6 @@ private:
      return detId.subdetId() == EcalBarrel ? m_peToABarrel : m_peToAEndcap ;
   }
 
-  const std::vector<float>  GetGainRatios(const DetId& detid) {
-
-    std::vector<float> gainRatios(3);
-    // get gain ratios  
-    EcalMGPAGainRatio theRatio= (*grHandle)[detid];
-    
-    
-    gainRatios[0] = 1.;
-    gainRatios[1] = theRatio.gain12Over6();
-    gainRatios[2] = theRatio.gain6Over1()  * theRatio.gain12Over6();
-
-    return gainRatios;
-  }
-
     
   /// these fields are set in initializeEvent()
   const edm::Event * theEvent;
@@ -277,7 +262,7 @@ private:
 
 typedef EcalSignalGenerator<EBDigitizerTraits>   EBSignalGenerator;
 typedef EcalSignalGenerator<EEDigitizerTraits>   EESignalGenerator;
-//typedef EcalSignalGenerator<ESDigitizerTraits>   ESSignalGenerator;
+typedef EcalSignalGenerator<ESDigitizerTraits>   ESSignalGenerator;
 
 #endif
 

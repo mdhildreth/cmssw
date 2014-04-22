@@ -578,8 +578,6 @@ void HcalDigitizer::finalizeEvent(edm::Event& e, const edm::EventSetup& eventSet
 
 
 void HcalDigitizer::beginRun(const edm::EventSetup & es) {
-
-  std::cout << " IN Hcal BeginRun " << std::endl;
   checkGeometry(es);
   theShapes->beginRun(es);
 }
@@ -597,9 +595,6 @@ void HcalDigitizer::checkGeometry(const edm::EventSetup & eventSetup) {
   // See if it's been updated
   if(&*geometry != theGeometry)
   {
-
-    std::cout << " New Geometry " << std::endl;
-
     theGeometry = &*geometry;
     updateGeometry(eventSetup);
   }

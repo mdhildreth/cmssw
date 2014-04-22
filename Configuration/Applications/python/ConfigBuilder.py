@@ -1407,6 +1407,7 @@ class ConfigBuilder(object):
 
 	self.loadAndRemember("SimGeneral/MixingModule/digi_noNoise_cfi")
 	self.executeAndRemember("process.mix.digitizers = cms.PSet(process.theDigitizersNoNoise)")
+	self.executeAndRemember("process.esDigiToRaw.Label = cms.string('mix')")  ##terrible hack - bypass zero suppression
 
 	self.scheduleSequence(sequence.split('.')[-1],'digitisation_step')
         return
@@ -1436,6 +1437,9 @@ class ConfigBuilder(object):
 	    """ Enrich the schedule with the digitisation step"""
 	    self.loadAndRemember(self.DATAMIXDefaultCFF)
 	    self.scheduleSequence('pdatamix','datamixing_step')
+	    if self._options.datamix == 'PreMix':
+		    self.loadAndRemember("SimGeneral/MixingModule/digi_MixPreMix_cfi")
+		    self.executeAndRemember("process.mix.digitizers = cms.PSet(process.theDigitizersMixPreMix)")
 
 	    if self._options.pileup_input:
 		    theFiles=''

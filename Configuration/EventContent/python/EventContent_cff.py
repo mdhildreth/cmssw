@@ -25,7 +25,7 @@ import FWCore.ParameterSet.Config as cms
 #    extension of RAWSIM for output of second stage of PreMixing using the DataMixer.  
 #
 #  PREMIXRAW
-#    extension of GENRAW for pre-mixing minbias events for pileup simulation.  Raw2Digi step is done.
+#    extension of GENRAW for output of second stage of PreMixing using the DataMixer.  
 #
 #  RAWDEBUG(RAWSIM+ALL_SIM_INFO), RAWDEBUGHLT(RAWDEBUG+HLTDEBUG)
 #
@@ -518,7 +518,6 @@ PREMIXEventContent.outputCommands.append('keep RPCDetIdRPCDigiMuonDigiCollection
 PREMIXEventContent.outputCommands.append('keep CrossingFramePlaybackInfoExtended_*_*_*')
 
 PREMIXRAWEventContent.outputCommands.extend(RAWSIMEventContent.outputCommands)
-ng
 PREMIXRAWEventContent.outputCommands.append('keep CrossingFramePlaybackInfoExtended_*_*_*')
 PREMIXRAWEventContent.outputCommands.append('drop CrossingFramePlaybackInfoExtended_mix_*_*')
 PREMIXRAWEventContent.outputCommands.append('drop PileupSummaryInfos_addPileupInfo_*_*')            

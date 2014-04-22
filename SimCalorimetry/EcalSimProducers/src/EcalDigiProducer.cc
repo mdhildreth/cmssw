@@ -343,7 +343,8 @@ EcalDigiProducer::EcalDigiProducer( const edm::ParameterSet& params,  edm::Consu
 						m_addESNoise         ) ) ,
    
    m_ESElectronicsSimFast ( !m_doFastES ? 0 :
-			    new ESElectronicsSimFast( m_addESNoise ) ) ,
+			    new ESElectronicsSimFast( m_addESNoise, 
+						      m_PreMix1      ) ) ,
 
    m_ESDigitizer          ( !m_doFastES ? 0 :
 			    new ESDigitizer( m_ESResponse           ,
@@ -624,6 +625,8 @@ EcalDigiProducer::finalizeEvent(edm::Event& event, edm::EventSetup const& eventS
    if( m_apdSeparateDigi ) {
      //event.put( apdResult,    m_apdDigiTag         ) ;
    }
+
+   std::cout << " EcalDigiProducer, size of ES " << preshowerResult->size() << std::endl;
 
    event.put( barrelResult,    m_EBdigiCollection ) ;
    event.put( endcapResult,    m_EEdigiCollection ) ;

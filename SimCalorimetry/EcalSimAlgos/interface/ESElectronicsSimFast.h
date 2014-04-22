@@ -39,9 +39,6 @@ class ESElectronicsSimFast
 
       void newEvent() {}
 
-      void setNoiseSignalGenerator(EcalBaseSignalGenerator * noiseSignalGenerator){
-      	theNoiseSignalGenerator = noiseSignalGenerator;
-      };
 
 
    private :

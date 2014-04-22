@@ -43,8 +43,6 @@ template <class Traits>
 void
 EcalTDigitizer<Traits>::setNoiseSignalGenerator(EcalBaseSignalGenerator* noiseSignalGenerator) {
 
-	std::cout << " Setting noise Signal Generator " << std::endl;
-
    theNoiseSignalGenerator = noiseSignalGenerator;
 }
 

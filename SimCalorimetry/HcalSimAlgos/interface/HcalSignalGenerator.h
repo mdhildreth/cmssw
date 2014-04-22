@@ -110,7 +110,6 @@ public:
 
 private:
 
-
   virtual void fillNoiseSignals(CLHEP::HepRandomEngine*) override {}
   virtual void fillNoiseSignals() override {}
 
@@ -123,19 +122,13 @@ private:
     return(DigiSum>0);
   }
 
-
   CaloSamples samplesInPE(const DIGI & digi)
   {
     // calibration, for future reference:  (same block for all Hcal types)
     HcalDetId cell = digi.id();
-    //         const HcalCalibrations& calibrations=conditions->getHcalCalibrations(cell);
-    const HcalQIECoder* channelCoder = theConditions->getHcalCoder (cell);
-    const HcalQIEShape* channelShape = theConditions->getHcalShape (cell);
-    HcalCoderDb coder (*channelCoder, *channelShape);
-    CaloSamples result;
-    coder.adc2fC(digi, result);
 
-    fC2pe(result);
+    CaloSamples result;
+
 
     // first, check if there was an overflow in this fake digi:
     bool overflow = false;

@@ -55,7 +55,6 @@ namespace edm {
   }  
 
   void DataMixingEcalDigiWorkerProd::beginRun(const edm::EventSetup& ES) {
-
   }
 
   void DataMixingEcalDigiWorkerProd::initializeEvent(const edm::Event &e, const edm::EventSetup& ES) {
@@ -77,6 +76,7 @@ namespace edm {
     theEESignalGenerator.initializeEvent(ep, &ES);
     theESSignalGenerator.initializeEvent(ep, &ES);
 
+    // add noise signals using incoming digis
 
     theEBSignalGenerator.fill(mcc);
     theEESignalGenerator.fill(mcc);

@@ -75,6 +75,7 @@ public:
   }
 
   /// Collects the digis
+
   void run(DigiCollection & output, CLHEP::HepRandomEngine* engine) {
     theHitResponse->finalizeHits(engine);
 

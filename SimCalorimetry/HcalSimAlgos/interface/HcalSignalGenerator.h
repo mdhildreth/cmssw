@@ -108,6 +108,15 @@ private:
 
   virtual void fillNoiseSignals(CLHEP::HepRandomEngine*) override {}
 
+  bool validDigi(const DIGI & digi)
+  {
+    int DigiSum = 0;
+    for(int id = 0; id<digi.size(); id++) {
+      if(digi[id].adc() > 0) ++DigiSum;
+    }
+    return(DigiSum>0);
+  }
+
   CaloSamples samplesInPE(const DIGI & digi)
   {
     // calibration, for future reference:  (same block for all Hcal types)

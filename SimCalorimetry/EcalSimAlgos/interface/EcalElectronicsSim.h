@@ -3,6 +3,8 @@
 
 
 #include "CalibFormats/CaloObjects/interface/CaloTSamples.h"
+#include "SimCalorimetry/CaloSimAlgos/interface/CaloVNoiseSignalGenerator.h"
+
 
 
 class EcalCoder           ;

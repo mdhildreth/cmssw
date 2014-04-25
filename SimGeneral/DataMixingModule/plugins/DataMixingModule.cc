@@ -31,9 +31,26 @@ namespace edm
 
   // Constructor 
   DataMixingModule::DataMixingModule(const edm::ParameterSet& ps) : BMixingModule(ps),
+    EBPileInputTag_(ps.getParameter<edm::InputTag>("EBPileInputTag")),
+    EEPileInputTag_(ps.getParameter<edm::InputTag>("EEPileInputTag")),
+    ESPileInputTag_(ps.getParameter<edm::InputTag>("ESPileInputTag")),
+    HBHEPileInputTag_(ps.getParameter<edm::InputTag>("HBHEPileInputTag")),
+    HOPileInputTag_(ps.getParameter<edm::InputTag>("HOPileInputTag")),
+    HFPileInputTag_(ps.getParameter<edm::InputTag>("HFPileInputTag")),
+    ZDCPileInputTag_(ps.getParameter<edm::InputTag>("ZDCPileInputTag")),
 							    label_(ps.getParameter<std::string>("Label"))
   {  
                                                        // what's "label_"?
+    // prepare for data access in DataMixingEcalDigiWorkerProd
+    tok_eb_ = consumes<EBDigitizerTraits::DigiCollection>(EBPileInputTag_);
+    tok_ee_ = consumes<EEDigitizerTraits::DigiCollection>(EEPileInputTag_);
+    tok_es_ = consumes<ESDigitizerTraits::DigiCollection>(ESPileInputTag_);
+
+    // prepare for data access in DataMixingHcalDigiWorkerProd
+    tok_hbhe_ = consumes<HBHEDigitizerTraits::DigiCollection>(HBHEPileInputTag_);
+    tok_ho_ = consumes<HODigitizerTraits::DigiCollection>(HOPileInputTag_);
+    tok_hf_ = consumes<HFDigitizerTraits::DigiCollection>(HFPileInputTag_);
+    tok_zdc_ = consumes<ZDCDigitizerTraits::DigiCollection>(ZDCPileInputTag_);
 
     // get the subdetector names
     this->getSubdetectorNames();  //something like this may be useful to check what we are supposed to do...
@@ -128,7 +145,14 @@ namespace edm
       produces< EEDigiCollection >(EEDigiCollectionDM_);
       produces< ESDigiCollection >(ESDigiCollectionDM_);
 
-      EMDigiWorker_ = new DataMixingEMDigiWorker(ps, consumesCollector());
+      if(addMCDigiNoise_ ) {
+	edm::ConsumesCollector iC(consumesCollector());
+        EcalDigiWorkerProd_ = new DataMixingEcalDigiWorkerProd(ps, iC);
+        EcalDigiWorkerProd_->setEBAccess(tok_eb_);
+        EcalDigiWorkerProd_->setEEAccess(tok_ee_);
+        EcalDigiWorkerProd_->setESAccess(tok_es_);
+      }
+      else { EMDigiWorker_ = new DataMixingEMDigiWorker(ps); }
     }
     else { // merge RecHits 
       EBRecHitCollectionDM_        = ps.getParameter<std::string>("EBRecHitCollectionDM");

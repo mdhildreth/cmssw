@@ -129,6 +129,21 @@ namespace edm {
       DataMixingHcalDigiWorker *HcalDigiWorker_ ;
       DataMixingHcalDigiWorkerProd *HcalDigiWorkerProd_ ;
 
+     // tokens needed to DataMixingHcalDigiWorkerProd
+      edm::InputTag EBPileInputTag_; // InputTag for Pileup Digis collection  
+      edm::InputTag EEPileInputTag_  ; // InputTag for Pileup Digis collection
+      edm::InputTag ESPileInputTag_  ; // InputTag for Pileup Digis collection
+      edm::InputTag HBHEPileInputTag_; // InputTag for Pileup Digis collection  
+      edm::InputTag HOPileInputTag_  ; // InputTag for Pileup Digis collection
+      edm::InputTag HFPileInputTag_  ; // InputTag for Pileup Digis collection
+      edm::InputTag ZDCPileInputTag_ ; // InputTag for Pileup Digis collection
+      edm::EDGetTokenT<HBHEDigitizerTraits::DigiCollection> tok_hbhe_;
+      edm::EDGetTokenT<HODigitizerTraits::DigiCollection> tok_ho_;
+      edm::EDGetTokenT<HFDigitizerTraits::DigiCollection> tok_hf_;
+      edm::EDGetTokenT<ZDCDigitizerTraits::DigiCollection> tok_zdc_;
+      edm::EDGetTokenT<EBDigitizerTraits::DigiCollection> tok_eb_;
+      edm::EDGetTokenT<EEDigitizerTraits::DigiCollection> tok_ee_;
+      edm::EDGetTokenT<ESDigitizerTraits::DigiCollection> tok_es_;
 
       bool MergeHcalDigis_;
       bool MergeHcalDigisProd_;

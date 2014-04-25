@@ -609,3 +609,19 @@ CLHEP::HepRandomEngine* EcalDigiProducer::randomEngine(edm::StreamID const& stre
   }
   return ptr;
 }
+
+void EcalDigiProducer::setEBNoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator) {
+  //noiseGenerator->setParameterMap(theParameterMap);
+  if(m_BarrelDigitizer) m_BarrelDigitizer->setNoiseSignalGenerator(noiseGenerator);
+}
+
+void EcalDigiProducer::setEENoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator) {
+  //noiseGenerator->setParameterMap(theParameterMap);
+  if(m_EndcapDigitizer) m_EndcapDigitizer->setNoiseSignalGenerator(noiseGenerator);
+}
+
+void EcalDigiProducer::setESNoiseSignalGenerator(EcalBaseSignalGenerator * noiseGenerator) {
+  //noiseGenerator->setParameterMap(theParameterMap);
+  if(m_ESDigitizer) m_ESDigitizer->setNoiseSignalGenerator(noiseGenerator);  
+}
+

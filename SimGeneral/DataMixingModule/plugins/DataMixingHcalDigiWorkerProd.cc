@@ -91,8 +91,10 @@ namespace edm {
     edm::Service<edm::RandomNumberGenerator> rng;
     CLHEP::HepRandomEngine* engine = &rng->getEngine(e.streamID());
 
-    myHcalDigitizer_->initializeEvent( e, ES );
+   //myHcalDigitizer_->initializeEvent( e, ES );
+
     myHcalDigitizer_->finalizeEvent( e, ES, engine );
+
   }
 
 } //edm

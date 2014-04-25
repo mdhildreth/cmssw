@@ -135,9 +135,6 @@ void
 EcalHitResponse::add( const PCaloHit& hit, CLHEP::HepRandomEngine* engine )
 {
   if (!edm::isNotFinite( hit.time() ) && ( 0 == m_hitFilter || m_hitFilter->accepts( hit ) ) ) {
-<<<<<<< HEAD
-    putAnalogSignal( hit, engine ) ;
-=======
 
     putAnalogSignal( hit, engine ) ;
 
@@ -156,7 +153,6 @@ EcalHitResponse::add( const CaloSamples& hit )
   if(rsize != hit.size()) {
     throw cms::Exception("EcalDigitization")
       << "CaloSamples and EcalSamples have different sizes. Type Mismatach";
->>>>>>> mdhildreth/7_1_X_PreMix_Merge_from_7_0_X
   }
 }
 

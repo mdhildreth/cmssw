@@ -9,7 +9,7 @@
  *  \authors: G. Bevilacqua, N. Amapane, G. Cerminara, R. Bellan
  */
 
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "DataFormats/DTDigi/interface/DTDigiCollection.h"

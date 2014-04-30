@@ -20,7 +20,7 @@
 #include <DataFormats/L1DTTrackFinder/interface/L1MuDTChambThContainer.h>
 #include <DataFormats/L1DTTrackFinder/interface/L1MuDTTrackContainer.h>
 
-#include <FWCore/Framework/interface/stream/EDProducer.h>
+#include <FWCore/Framework/interface/EDProducer.h>
 #include <FWCore/ParameterSet/interface/ParameterSet.h>
 #include <FWCore/Utilities/interface/InputTag.h>
 

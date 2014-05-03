@@ -24,6 +24,7 @@
 #include <memory>
 
 // user include files
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -31,6 +32,12 @@
 #include "FWCore/Utilities/interface/InputTag.h"
 
 #include "DataFormats/FEDRawData/interface/FEDRawData.h"
+
+// GCT input data formats
+#include "DataFormats/L1CaloTrigger/interface/L1CaloEmCand.h"
+#include "DataFormats/L1CaloTrigger/interface/L1CaloRegion.h"
+#include "DataFormats/L1CaloTrigger/interface/L1CaloRegionDetId.h"
+#include "DataFormats/L1CaloTrigger/interface/L1CaloCollections.h"
 
 #include "EventFilter/GctRawToDigi/src/GctFormatTranslateMCLegacy.h"
 
@@ -55,6 +62,23 @@ class GctDigiToRaw : public edm::EDProducer {
   // input tags
   edm::InputTag rctInputLabel_;
   edm::InputTag gctInputLabel_;
+
+  // consumes tokens
+
+  edm::EDGetTokenT<L1GctEmCandCollection> isoEm_token_;
+  edm::EDGetTokenT<L1GctEmCandCollection> nonIsoEm_token_;
+  edm::EDGetTokenT<L1GctJetCandCollection> cenJets_token_;
+  edm::EDGetTokenT<L1GctJetCandCollection> forJets_token_;
+  edm::EDGetTokenT<L1GctJetCandCollection> tauJets_token_;
+  edm::EDGetTokenT<L1GctEtTotalCollection> etTotal_token_;
+  edm::EDGetTokenT<L1GctEtHadCollection> etHad_token_;
+  edm::EDGetTokenT<L1GctEtMissCollection> etMiss_token_;
+  edm::EDGetTokenT<L1GctHFRingEtSumsCollection> hfRingSums_token_;
+  edm::EDGetTokenT<L1GctHFBitCountsCollection> hfBitCounts_token_;
+  edm::EDGetTokenT<L1GctHtMissCollection> htMiss_token_;
+  edm::EDGetTokenT<L1GctJetCountsCollection> jetCounts_token_;
+  edm::EDGetTokenT<L1CaloEmCollection> rctEm_token_;
+  edm::EDGetTokenT<L1CaloRegionCollection> rctCalo_token_;
 
   // pack flags
   bool packRctEm_;

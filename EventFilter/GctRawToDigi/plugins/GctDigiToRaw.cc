@@ -20,12 +20,6 @@
 // Header needed to computer CRCs
 #include "FWCore/Utilities/interface/CRC16.h"
 
-// GCT input data formats
-#include "DataFormats/L1CaloTrigger/interface/L1CaloEmCand.h"
-#include "DataFormats/L1CaloTrigger/interface/L1CaloRegion.h"
-#include "DataFormats/L1CaloTrigger/interface/L1CaloRegionDetId.h"
-#include "DataFormats/L1CaloTrigger/interface/L1CaloCollections.h"
-
 // GCT output data formats
 #include "DataFormats/L1GlobalCaloTrigger/interface/L1GctCollections.h"
 
@@ -51,6 +45,25 @@ GctDigiToRaw::GctDigiToRaw(const edm::ParameterSet& iConfig) :
 
   //register the products
   produces<FEDRawDataCollection>();
+
+  // The GCT and RCT input label strings
+  const std::string gctInputLabelStr = gctInputLabel_.label();
+
+  isoEm_token_ =   consumes<L1GctEmCandCollection >(edm::InputTag(gctInputLabelStr, "isoEm"));
+  nonIsoEm_token_ = consumes<L1GctEmCandCollection >(edm::InputTag(gctInputLabelStr, "nonIsoEm"));
+  cenJets_token_ =  consumes<L1GctJetCandCollection>(edm::InputTag(gctInputLabelStr, "cenJets"));
+  forJets_token_ =  consumes<L1GctJetCandCollection>(edm::InputTag(gctInputLabelStr, "forJets"));
+  tauJets_token_ =  consumes<L1GctJetCandCollection>(edm::InputTag(gctInputLabelStr, "tauJets"));
+  etTotal_token_ =  consumes<L1GctEtTotalCollection>(edm::InputTag(gctInputLabelStr, ""));
+  etHad_token_ =    consumes<L1GctEtHadCollection  >(edm::InputTag(gctInputLabelStr, ""));
+  etMiss_token_ =   consumes<L1GctEtMissCollection >(edm::InputTag(gctInputLabelStr, ""));
+  hfRingSums_token_ =  consumes<L1GctHFRingEtSumsCollection>(edm::InputTag(gctInputLabelStr, ""));
+  hfBitCounts_token_ = consumes<L1GctHFBitCountsCollection>(edm::InputTag(gctInputLabelStr, ""));
+  htMiss_token_ =   consumes<L1GctHtMissCollection>(edm::InputTag(gctInputLabelStr, ""));
+  jetCounts_token_ = consumes<L1GctJetCountsCollection>(edm::InputTag(gctInputLabelStr, ""));
+  rctEm_token_ = consumes<L1CaloEmCollection>(rctInputLabel_);
+  rctCalo_token_ = consumes<L1CaloRegionCollection>(rctInputLabel_);
+
 }
 
 
@@ -78,43 +91,39 @@ GctDigiToRaw::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   // Supply bx and EvID to the packer so it can make internal capture block headers.
   formatTranslator_.setPackingBxId(bx);
   formatTranslator_.setPackingEventId(eventNumber);
- 
-  // The GCT and RCT input label strings
-  const std::string gctInputLabelStr = gctInputLabel_.label();
-  const std::string rctInputLabelStr = rctInputLabel_.label();
-  
+   
   // get GCT digis
   edm::Handle<L1GctEmCandCollection> isoEm;
-  iEvent.getByLabel(gctInputLabelStr, "isoEm", isoEm);
+  iEvent.getByToken(isoEm_token_, isoEm);
   edm::Handle<L1GctEmCandCollection> nonIsoEm;
-  iEvent.getByLabel(gctInputLabelStr, "nonIsoEm", nonIsoEm);
+  iEvent.getByToken(nonIsoEm_token_, nonIsoEm);
   edm::Handle<L1GctJetCandCollection> cenJets;
-  iEvent.getByLabel(gctInputLabelStr, "cenJets", cenJets);
+  iEvent.getByToken(cenJets_token_, cenJets);
   edm::Handle<L1GctJetCandCollection> forJets;
-  iEvent.getByLabel(gctInputLabelStr, "forJets", forJets);
+  iEvent.getByToken(forJets_token_, forJets);
   edm::Handle<L1GctJetCandCollection> tauJets;
-  iEvent.getByLabel(gctInputLabelStr, "tauJets", tauJets);
+  iEvent.getByToken(tauJets_token_, tauJets);
   edm::Handle<L1GctEtTotalCollection> etTotal;
-  iEvent.getByLabel(gctInputLabelStr, "", etTotal);
+  iEvent.getByToken(etTotal_token_, etTotal);
   edm::Handle<L1GctEtHadCollection> etHad;
-  iEvent.getByLabel(gctInputLabelStr, "", etHad);
+  iEvent.getByToken(etHad_token_, etHad);
   edm::Handle<L1GctEtMissCollection> etMiss;
-  iEvent.getByLabel(gctInputLabelStr, "", etMiss);
+  iEvent.getByToken(etMiss_token_, etMiss);
   edm::Handle<L1GctHFRingEtSumsCollection> hfRingSums;
-  iEvent.getByLabel(gctInputLabelStr, "", hfRingSums);
+  iEvent.getByToken(hfRingSums_token_, hfRingSums);
   edm::Handle<L1GctHFBitCountsCollection> hfBitCounts;
-  iEvent.getByLabel(gctInputLabelStr, "", hfBitCounts);
+  iEvent.getByToken(hfBitCounts_token_, hfBitCounts);
   edm::Handle<L1GctHtMissCollection> htMiss;
-  iEvent.getByLabel(gctInputLabelStr, "", htMiss);
+  iEvent.getByToken(htMiss_token_, htMiss);
   edm::Handle<L1GctJetCountsCollection> jetCounts;
-  iEvent.getByLabel(gctInputLabelStr, "", jetCounts);
+  iEvent.getByToken(jetCounts_token_, jetCounts);
 
   // get RCT EM Cand digi
   bool packRctEmThisEvent = packRctEm_;
   edm::Handle<L1CaloEmCollection> rctEm;
   if(packRctEmThisEvent)
   {
-    iEvent.getByLabel(rctInputLabelStr, rctEm);
+    iEvent.getByToken(rctEm_token_, rctEm);
     if(rctEm.failedToGet())
     {
       packRctEmThisEvent = false;
@@ -127,7 +136,7 @@ GctDigiToRaw::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   edm::Handle<L1CaloRegionCollection> rctCalo;
   if(packRctCaloThisEvent)
   {
-    iEvent.getByLabel(rctInputLabelStr, rctCalo);
+    iEvent.getByToken(rctCalo_token_, rctCalo);
     if(rctCalo.failedToGet())
     {
       packRctCaloThisEvent = false;

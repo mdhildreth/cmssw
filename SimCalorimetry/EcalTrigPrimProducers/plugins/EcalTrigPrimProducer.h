@@ -19,11 +19,13 @@
 
 #include <memory>
  
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/Framework/interface/stream/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
  
 #include "DataFormats/Common/interface/Handle.h"
+#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
  
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
   
@@ -52,6 +54,10 @@ class EcalTrigPrimProducer : public edm::stream::EDProducer<>
   std::string label_;
   std::string instanceNameEB_;
   std::string instanceNameEE_;
+
+  edm::EDGetTokenT<EBDigiCollection> EB_token;
+  edm::EDGetTokenT<EEDigiCollection> EE_token;
+
 
   int binOfMaximum_;
   bool fillBinOfMaximumFromHistory_;

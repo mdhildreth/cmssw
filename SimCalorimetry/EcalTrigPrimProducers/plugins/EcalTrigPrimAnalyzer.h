@@ -16,6 +16,7 @@
 
 // system include files
 //#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 
@@ -30,6 +31,11 @@
 #include <TTree.h>
 #include <TH2F.h>
 #include <TH1F.h>
+
+#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
+#include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveDigi.h"
+#include "DataFormats/EcalRecHit/interface/EcalRecHit.h"
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 //
 // class declaration
@@ -63,6 +69,11 @@ class EcalTrigPrimAnalyzer : public edm::EDAnalyzer {
 
   edm::InputTag rechits_labelEB_;
   edm::InputTag rechits_labelEE_;
+
+  edm::EDGetTokenT<EcalTrigPrimDigiCollection> TP_token;
+  edm::EDGetTokenT<EcalRecHitCollection> EBRec_token;
+  edm::EDGetTokenT<EcalRecHitCollection> EERec_token;
+
 
   bool recHits_;
 };

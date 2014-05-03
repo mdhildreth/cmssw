@@ -23,7 +23,6 @@
 #include "DataFormats/Provenance/interface/ProductID.h"
 #include "DataFormats/Provenance/interface/ParameterSetID.h"
 #include "DataFormats/Provenance/interface/Provenance.h"
-#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
 
 #include "CondFormats/DataRecord/interface/EcalTPGFineGrainEBGroupRcd.h"
 #include "CondFormats/DataRecord/interface/EcalTPGLutGroupRcd.h"
@@ -73,6 +72,10 @@ EcalTrigPrimProducer::EcalTrigPrimProducer(const edm::ParameterSet&  iConfig):
   //register your products
   produces <EcalTrigPrimDigiCollection >();
   if (tcpFormat_) produces <EcalTrigPrimDigiCollection >("formatTCP");
+
+  EB_token = consumes<EBDigiCollection>(edm::InputTag(label_, instanceNameEB_));
+  EE_token = consumes<EEDigiCollection>(edm::InputTag(label_, instanceNameEE_));
+
 }
 
 static
@@ -216,12 +219,12 @@ EcalTrigPrimProducer::produce(edm::Event& e, const edm::EventSetup&  iSetup)
   bool endcap=true;
   if (barrelOnly_) endcap=false;
 
-  if (!e.getByLabel(label_,instanceNameEB_,ebDigis)) {
+  if (!e.getByToken(EB_token, ebDigis)) {
     barrel=false;
     edm::LogWarning("EcalTPG") <<" Couldnt find Barrel dataframes with producer "<<label_<<" and label "<<instanceNameEB_<<"!!!";
   }
   if (!barrelOnly_) {
-    if (!e.getByLabel(label_,instanceNameEE_,eeDigis)) {
+    if (!e.getByToken(EE_token, eeDigis)) {
       endcap=false;
       edm::LogWarning("EcalTPG") <<" Couldnt find Endcap dataframes with producer "<<label_<<" and label "<<instanceNameEE_<<"!!!";
     }

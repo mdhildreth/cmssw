@@ -17,6 +17,8 @@
 
 
 // system include files
+
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 
@@ -28,6 +30,9 @@
 #include <string>
 #include <TH1I.h>
 #include <TFile.h>
+
+#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
+#include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveDigi.h"
 
 
 //
@@ -55,6 +60,10 @@ class EcalTPInputAnalyzer : public edm::EDAnalyzer {
   std::string ebLabel_;
   std::string eeLabel_;
   std::string producer_;
+
+  edm::EDGetTokenT<EBDigiCollection> EB_token;
+  edm::EDGetTokenT<EEDigiCollection> EE_token;
+
 
 };
 #endif

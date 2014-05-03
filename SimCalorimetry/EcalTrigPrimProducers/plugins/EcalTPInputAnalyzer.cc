@@ -30,8 +30,6 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "EcalTPInputAnalyzer.h"
-#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
-#include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveDigi.h"
 
 using namespace edm;
 
@@ -55,6 +53,11 @@ EcalTPInputAnalyzer::EcalTPInputAnalyzer(const edm::ParameterSet& iConfig)
    producer_= iConfig.getParameter<std::string>("Producer");
    ebLabel_= iConfig.getParameter<std::string>("EBLabel");
    eeLabel_= iConfig.getParameter<std::string>("EELabel");
+
+   EB_token = consumes<EBDigiCollection>(edm::InputTag(producer_, ebLabel_));
+   EE_token = consumes<EEDigiCollection>(edm::InputTag(producer_, eeLabel_));
+
+
 }
 
 
@@ -84,12 +87,12 @@ EcalTPInputAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   bool barrel=true;
   edm::Handle<EBDigiCollection> ebDigis;
   edm::Handle<EEDigiCollection> eeDigis;
-  if (!iEvent.getByLabel(producer_,ebLabel_,ebDigis)) {
+  if (!iEvent.getByToken(EB_token,ebDigis)) {
     barrel=false;
     edm::LogWarning("EcalTPG") <<" Couldnt find Barrel dataframes with Producer:"<<producer_<<" and label: "<<ebLabel_;
   }
   bool endcap=true;
-  if (!iEvent.getByLabel(producer_,eeLabel_,eeDigis)) {
+  if (!iEvent.getByToken(EE_token,eeDigis)) {
     endcap=false;
     edm::LogWarning("EcalTPG") <<" Couldnt find Endcap dataframes with Producer:"<<producer_<<" and label: "<<eeLabel_;
   }

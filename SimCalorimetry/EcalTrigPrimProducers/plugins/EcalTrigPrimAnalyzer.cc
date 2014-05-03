@@ -29,11 +29,6 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
-#include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveDigi.h"
-#include "DataFormats/EcalRecHit/interface/EcalRecHit.h"
-#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
-
 #include "Geometry/CaloGeometry/interface/CaloGeometry.h"
 #include "Geometry/CaloGeometry/interface/CaloSubdetectorGeometry.h"
 #include "Geometry/CaloGeometry/interface/CaloCellGeometry.h"
@@ -74,11 +69,17 @@ EcalTrigPrimAnalyzer::EcalTrigPrimAnalyzer(const edm::ParameterSet&  iConfig)
 
   recHits_= iConfig.getParameter<bool>("AnalyzeRecHits");
   label_=iConfig.getParameter<edm::InputTag>("inputTP");
+
+  TP_token = consumes<EcalTrigPrimDigiCollection>(label_);
+
   if (recHits_) {
     hTPvsRechit_= new TH2F("TP_vs_RecHit","TP vs  rechit",256,-1,255,255,0,255);
     hTPoverRechit_= new TH1F("TP_over_RecHit","TP over rechit",500,0,4);
     rechits_labelEB_=iConfig.getParameter<edm::InputTag>("inputRecHitsEB");
     rechits_labelEE_=iConfig.getParameter<edm::InputTag>("inputRecHitsEE");
+
+    EBRec_token = consumes<EcalRecHitCollection>(rechits_labelEB_);
+    EERec_token = consumes<EcalRecHitCollection>(rechits_labelEE_);
   }
 }
 
@@ -108,7 +109,7 @@ EcalTrigPrimAnalyzer::analyze(const edm::Event& iEvent, const  edm::EventSetup &
 
   // Get input
   edm::Handle<EcalTrigPrimDigiCollection> tp;
-  iEvent.getByLabel(label_,tp);
+  iEvent.getByToken(TP_token,tp);
   for (unsigned int i=0;i<tp.product()->size();i++) {
     EcalTriggerPrimitiveDigi d=(*(tp.product()))[i];
     int subdet=d.id().subDet()-1;
@@ -129,10 +130,10 @@ EcalTrigPrimAnalyzer::analyze(const edm::Event& iEvent, const  edm::EventSetup &
 
   // comparison with RecHits
   edm::Handle<EcalRecHitCollection> rechit_EB_col;
-  iEvent.getByLabel(rechits_labelEB_,rechit_EB_col);
+  iEvent.getByToken(EBRec_token,rechit_EB_col);
 
   edm::Handle<EcalRecHitCollection> rechit_EE_col;
-  iEvent.getByLabel(rechits_labelEE_,rechit_EE_col);
+  iEvent.getByToken(EERec_token,rechit_EE_col);
   
 
   edm::ESHandle<CaloGeometry> theGeometry;

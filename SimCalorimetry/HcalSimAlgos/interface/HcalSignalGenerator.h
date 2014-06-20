@@ -89,7 +89,6 @@ public:
 
     if (digis)
     {
-
       // loop over digis, adding these to the existing maps
       for(typename COLLECTION::const_iterator it  = digis->begin();
           it != digis->end(); ++it) 
@@ -124,11 +123,11 @@ private:
 
   CaloSamples samplesInPE(const DIGI & digi)
   {
+
     // calibration, for future reference:  (same block for all Hcal types)
     HcalDetId cell = digi.id();
 
-    CaloSamples result;
-
+    CaloSamples result = CaloSamples(digi.id(),digi.size());
 
     // first, check if there was an overflow in this fake digi:
     bool overflow = false;
@@ -162,6 +161,7 @@ private:
     // std::cout << " HcalSignalGenerator: noise input in fC " << result << std::endl;
  
     // translation done in fC, convert to pe: 
+
     fC2pe(result);
 
     return result;

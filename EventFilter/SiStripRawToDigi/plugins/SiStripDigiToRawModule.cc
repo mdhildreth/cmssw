@@ -31,6 +31,7 @@ namespace sistrip {
 	<< "[sistrip::DigiToRawModule::DigiToRawModule]"
 	<< " Constructing object...";
     }  
+
     
     switch(mode_) {
     case READOUT_MODE_ZERO_SUPPRESSED_LITE: rawdigi_ = false; break;

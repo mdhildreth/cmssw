@@ -67,6 +67,7 @@ namespace edm
     }
   
     theSiNoiseAdder.reset(new SiGaussianTailNoiseAdder(theThreshold));
+
     //    theSiZeroSuppress = new SiStripFedZeroSuppression(theFedAlgo);
     //theSiDigitalConverter(new SiTrivialDigitalConverter(theElectronPerADC));
 
@@ -90,6 +91,7 @@ namespace edm
 	 (isub == StripSubdetector::TID) ||
 	 (isub == StripSubdetector::TOB) ||
 	 (isub == StripSubdetector::TEC)) {
+
 	auto stripdet = dynamic_cast<StripGeomDetUnit const*>((*iu));
 	assert(stripdet != 0);
 	DMinitializeDetUnit(stripdet, iSetup);
@@ -334,7 +336,6 @@ namespace edm
           }
         }
 
-
 	//SiStripPedestals::Range detPedestalRange = pedestalHandle->getRange(detID);
 
 	// -----------------------------------------------------------
@@ -356,7 +357,6 @@ namespace edm
 	
 	DigitalVecType digis;
 	theSiZeroSuppress->suppress(theSiDigitalConverter->convert(detAmpl, gainHandle, detID), digis, detID,noiseHandle,thresholdHandle);
-
 
 	SSD.data = digis;
 	//	if(digis.size() > 0) {

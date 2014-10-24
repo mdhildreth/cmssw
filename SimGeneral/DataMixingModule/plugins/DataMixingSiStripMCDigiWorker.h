@@ -122,7 +122,6 @@ namespace edm
       std::unique_ptr<SiStripFedZeroSuppression> theSiZeroSuppress;
       std::unique_ptr<SiTrivialDigitalConverter> theSiDigitalConverter;
 
-
       edm::ESHandle<TrackerGeometry> pDD;
 
       // bad channels for each detector ID
@@ -130,6 +129,7 @@ namespace edm
       // first and last channel wit signal for each detector ID
       std::map<unsigned int, size_t> firstChannelsWithSignal;
       std::map<unsigned int, size_t> lastChannelsWithSignal;
+
 
       //----------------------------
 

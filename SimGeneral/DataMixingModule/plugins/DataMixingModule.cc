@@ -64,7 +64,11 @@ namespace edm
     MergeHcalDigis_ = (ps.getParameter<std::string>("HcalMergeType")).compare("Digis") == 0;
     if(MergeHcalDigis_) MergeHcalDigisProd_ = (ps.getParameter<std::string>("HcalDigiMerge")=="FullProd");
 
-    addMCDigiNoise_ = ps.getUntrackedParameter<bool>("addMCDigiNoise", false);  // for Sim on Sim mixing
+    addMCDigiNoise_ = false;
+
+    addMCDigiNoise_ = ps.getUntrackedParameter<bool>("addMCDigiNoise");  // for Sim on Sim mixing
+
+    
 
     // Put Fast Sim Sequences here for Simplification: Fewer options!
 
@@ -343,7 +347,6 @@ namespace edm
 	delete SiStripRawWorker_;
       else if(addMCDigiNoise_ ) delete SiStripMCDigiWorker_;
       else delete SiStripWorker_;
-
       delete SiPixelWorker_;
     }
     if(MergePileup_) { delete PUWorker_;}

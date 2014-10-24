@@ -10,3 +10,4 @@ stripDigitizer = cms.PSet(
     makeDigiSimLinks = cms.untracked.bool(True)
     )
 
+

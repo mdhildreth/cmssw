@@ -325,21 +325,8 @@ namespace edm
       EcalDigiWorkerProd_->beginRun( ES );
       HcalDigiWorkerProd_->beginRun( run, ES );
     }
-    if( addMCDigiNoise_ && MergeHcalDigisProd_) {
-      HcalDigiWorkerProd_->initializeEvent( e, ES );
-    }
   }
 
-  void DataMixingModule::beginRun(edm::Run const& run, const edm::EventSetup& ES) { 
-
-    //std::cout << " DM calling begin run " << std::endl;
-
-    BMixingModule::beginRun( run, ES);
-    if( addMCDigiNoise_ ) {
-      EcalDigiWorkerProd_->beginRun( ES );
-      HcalDigiWorkerProd_->beginRun( ES );
-    }
-  }
 
   // Virtual destructor needed.
   DataMixingModule::~DataMixingModule() { 

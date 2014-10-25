@@ -89,7 +89,7 @@ namespace edm {
       std::string EEDigiCollectionDM_; // secondary name to be given to EE collection of hits
       std::string ESDigiCollectionDM_; // secondary name to be given to EE collection of hits
 
-xs      // Hcal
+      // Hcal
       // Rechits:
       // output:
       std::string HBHERecHitCollectionDM_; // secondary name to be given to HBHE collection of hits

@@ -1427,21 +1427,6 @@ class ConfigBuilder(object):
 	self.scheduleSequence(sequence.split('.')[-1],'digitisation_step')
         return
 
-    def prepare_DIGIPREMIX_S2(self, sequence = None):
-        """ Enrich the schedule with the digitisation step"""
-        self.loadDefaultOrSpecifiedCFF(sequence,self.DIGIDefaultCFF)
-
-	self.loadAndRemember("SimGeneral/MixingModule/digi_MixPreMix_cfi")
-
-
-        if sequence == 'pdigi_valid':
-            self.executeAndRemember("process.mix.digitizers = cms.PSet(process.theDigitizersMixPreMixValid)")
-	else:
-	    elf.executeAndRemember("process.mix.digitizers = cms.PSet(process.theDigitizersMixPreMix)")
-
-	self.scheduleSequence(sequence.split('.')[-1],'digitisation_step')
-        return
-
     def prepare_CFWRITER(self, sequence = None):
 	    """ Enrich the schedule with the crossing frame writer step"""
 	    self.loadAndRemember(self.CFWRITERDefaultCFF)

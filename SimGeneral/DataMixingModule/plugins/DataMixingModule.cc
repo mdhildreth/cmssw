@@ -45,11 +45,6 @@ namespace edm
     tok_ee_ = consumes<EEDigitizerTraits::DigiCollection>(EEPileInputTag_);
     tok_es_ = consumes<ESDigitizerTraits::DigiCollection>(ESPileInputTag_);
 
-    // prepare for data access in DataMixingEcalDigiWorkerProd
-    tok_eb_ = consumes<EBDigitizerTraits::DigiCollection>(EBPileInputTag_);
-    tok_ee_ = consumes<EEDigitizerTraits::DigiCollection>(EEPileInputTag_);
-    tok_es_ = consumes<ESDigitizerTraits::DigiCollection>(ESPileInputTag_);
-
     // prepare for data access in DataMixingHcalDigiWorkerProd
     tok_hbhe_ = consumes<HBHEDigitizerTraits::DigiCollection>(HBHEPileInputTag_);
     tok_ho_ = consumes<HODigitizerTraits::DigiCollection>(HOPileInputTag_);

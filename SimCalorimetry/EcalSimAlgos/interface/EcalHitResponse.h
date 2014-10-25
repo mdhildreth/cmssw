@@ -63,8 +63,6 @@ class EcalHitResponse
 
       virtual void add( const CaloSamples&  hit ) ;
 
-      virtual void add( const CaloSamples&  hit ) ;
-
       virtual void initializeHits() ;
 
       virtual void finalizeHits() ;

@@ -120,8 +120,6 @@ namespace edm
       std::unique_ptr<SiStripFedZeroSuppression> theSiZeroSuppress;
       std::unique_ptr<SiTrivialDigitalConverter> theSiDigitalConverter;
 
-      CLHEP::HepRandomEngine*  rndEngine;
-
       edm::ESHandle<TrackerGeometry> pDD;
 
       // bad channels for each detector ID

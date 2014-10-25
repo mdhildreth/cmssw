@@ -26,7 +26,7 @@ simEcalDigis = cms.EDProducer("EcalSelectiveReadoutProducer",
     configFromCondDB = cms.bool(True),
 
     # Switch to turn off SRP altogether using special DB payload
-    UseFullReadout = cms.bool(False),
+    UseFullReadout = cms.bool(True),
 
     # ES label?
     # NZSLabel = cms.ESInputTag(' '),

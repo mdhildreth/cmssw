@@ -24,9 +24,6 @@ import FWCore.ParameterSet.Config as cms
 #  PREMIXRAW
 #    extension of RAWSIM for output of second stage of PreMixing using the DataMixer.  
 #
-#  PREMIXRAW
-#    extension of GENRAW for output of second stage of PreMixing using the DataMixer.  
-#
 #  RAWDEBUG(RAWSIM+ALL_SIM_INFO), RAWDEBUGHLT(RAWDEBUG+HLTDEBUG)
 #
 #  RAWSIMHLT (RAWSIM + HLTDEBUG)

@@ -66,7 +66,6 @@ namespace edm {
 
       virtual void initializeEvent(edm::Event const& e, edm::EventSetup const& eventSetup);
       void beginRun(edm::Run const& run, edm::EventSetup const& eventSetup);
-
       void pileWorker(const edm::EventPrincipal&, int bcr, int EventId,const edm::EventSetup& ES, ModuleCallingContext const*);
       //virtual void beginJob();
       //virtual void endJob();
@@ -90,7 +89,7 @@ namespace edm {
       std::string EEDigiCollectionDM_; // secondary name to be given to EE collection of hits
       std::string ESDigiCollectionDM_; // secondary name to be given to EE collection of hits
 
-      // Hcal
+xs      // Hcal
       // Rechits:
       // output:
       std::string HBHERecHitCollectionDM_; // secondary name to be given to HBHE collection of hits

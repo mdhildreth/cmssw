@@ -49,8 +49,7 @@
 namespace edm
 {
   class ModuleCallingContext;
-  class ConsumesCollector;
- 
+  class ConsumesCollector; 
   class DataMixingSiStripMCDigiWorker
     {
     public:
@@ -59,7 +58,6 @@ namespace edm
 
      /** standard constructor*/
       explicit DataMixingSiStripMCDigiWorker(const edm::ParameterSet& ps, edm::ConsumesCollector && iC);
-
       /**Default destructor*/
       virtual ~DataMixingSiStripMCDigiWorker();
 
@@ -122,6 +120,8 @@ namespace edm
       std::unique_ptr<SiStripFedZeroSuppression> theSiZeroSuppress;
       std::unique_ptr<SiTrivialDigitalConverter> theSiDigitalConverter;
 
+      CLHEP::HepRandomEngine*  rndEngine;
+
       edm::ESHandle<TrackerGeometry> pDD;
 
       // bad channels for each detector ID
@@ -130,8 +130,6 @@ namespace edm
       std::map<unsigned int, size_t> firstChannelsWithSignal;
       std::map<unsigned int, size_t> lastChannelsWithSignal;
 
-
-      //----------------------------
 
       class StrictWeakOrdering{
       public:

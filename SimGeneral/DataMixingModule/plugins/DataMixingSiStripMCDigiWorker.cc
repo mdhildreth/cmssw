@@ -265,7 +265,6 @@ namespace edm
 	    Signals.insert( std::make_pair(formerStrip, ADCSum));
 
 	    //detAmpl[formerStrip] = ADCSum;
-
 	    //if (ADCSum > 511) ADCSum = 255;
 	    //else if (ADCSum > 253 && ADCSum < 512) ADCSum = 254;
 	    //SiStripDigi aHit(formerStrip, ADCSum);
@@ -282,7 +281,6 @@ namespace edm
 	  Signals.insert( std::make_pair(formerStrip, ADCSum));
 
 	  //detAmpl[formerStrip] = ADCSum;
-
 	  //	  if (ADCSum > 511) ADCSum = 255;
 	  //else if (ADCSum > 253 && ADCSum < 512) ADCSum = 254;
 	  //SSD.push_back( SiStripDigi(formerStrip, ADCSum) );	  

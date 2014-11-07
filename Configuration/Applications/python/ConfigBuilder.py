@@ -1407,7 +1407,6 @@ class ConfigBuilder(object):
 
 	self.loadAndRemember("SimGeneral/MixingModule/digi_noNoise_cfi")
 	self.executeAndRemember("process.mix.digitizers = cms.PSet(process.theDigitizersNoNoise)")
-	self.executeAndRemember("process.esDigiToRaw.Label = cms.string('mix')")  ##terrible hack - bypass zero suppression
 
 	self.scheduleSequence(sequence.split('.')[-1],'digitisation_step')
         return

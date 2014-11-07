@@ -1407,6 +1407,7 @@ class ConfigBuilder(object):
 
 	self.loadAndRemember("SimGeneral/MixingModule/digi_noNoise_cfi")
 	self.executeAndRemember("process.mix.digitizers = cms.PSet(process.theDigitizersNoNoise)")
+	self.executeAndRemember("process.esDigiToRaw.Label = cms.string('mix')")  ##terrible hack - bypass zero suppression
 
 	self.scheduleSequence(sequence.split('.')[-1],'digitisation_step')
         return
@@ -1455,6 +1456,7 @@ class ConfigBuilder(object):
 	    self.scheduleSequence(sequence.split('.')[-1],'digi2raw_step')
 	    if "DIGIPREMIX" in self.stepMap.keys():
 		    self.executeAndRemember("process.esDigiToRaw.Label = cms.string('mix')")  ##terrible hack - bypass zero suppression
+		    self.executeAndRemember("process.SiStripDigiToRaw.FedReadoutMode = cms.string('PREMIX_RAW')")  ##special readout mode for StripTracker
 
             return
 

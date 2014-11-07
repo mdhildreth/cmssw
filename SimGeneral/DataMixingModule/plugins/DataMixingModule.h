@@ -64,9 +64,8 @@ namespace edm {
       virtual void doPileUp(edm::Event &e,const edm::EventSetup& ES) override;
       virtual void put(edm::Event &e,const edm::EventSetup& ES) ;
 
-      void initializeEvent(edm::Event const& e, edm::EventSetup const& eventSetup);
+      virtual void initializeEvent(edm::Event const& e, edm::EventSetup const& eventSetup);
       void beginRun(edm::Run const& run, edm::EventSetup const& eventSetup);
-
       void pileWorker(const edm::EventPrincipal&, int bcr, int EventId,const edm::EventSetup& ES, ModuleCallingContext const*);
       //virtual void beginJob();
       //virtual void endJob();

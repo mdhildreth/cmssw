@@ -42,7 +42,7 @@ SiStripDigitizerAlgorithm::SiStripDigitizerAlgorithm(const edm::ParameterSet& co
   cmnRMStob(conf.getParameter<double>("cmnRMStob")),
   cmnRMStid(conf.getParameter<double>("cmnRMStid")),
   cmnRMStec(conf.getParameter<double>("cmnRMStec")),
-  APVSaturationProbScaling(conf.getParameter<double>("APVSaturationProbScaling")),
+  APVSaturationProbScaling_(conf.getParameter<double>("APVSaturationProbScaling")),
   makeDigiSimLinks_(conf.getUntrackedParameter<bool>("makeDigiSimLinks", false)),
   peakMode(conf.getParameter<bool>("APVpeakmode")),
   noise(conf.getParameter<bool>("Noise")),
@@ -117,7 +117,6 @@ SiStripDigitizerAlgorithm::initializeDetUnit(StripGeomDetUnit const * det, const
     SiStripBadStrip::data fs = deadChannelHandle->decode(*it);
     for(int strip = fs.firstStrip; strip < fs.firstStrip + fs.range; ++strip) {
 		badChannels[strip] = true;
-		hipChannels[strip] = true;
 	}
   }
   firstChannelsWithSignal[detId] = numStrips;
@@ -200,7 +199,7 @@ SiStripDigitizerAlgorithm::accumulateSimHits(std::vector<PSimHit>::const_iterato
 	// If yes --> the APV is flagged as bad
 	// If no  --> nothing particular happens
           if(mapOfAPVprobabilities.count(detId)>0){
-            if(CLHEP::RandFlat::shoot(engine) < mapOfAPVprobabilities[detId]*APVSaturationProbScaling){
+            if(CLHEP::RandFlat::shoot(engine) < mapOfAPVprobabilities[detId]*APVSaturationProbScaling_){
               int FirstAPV = localFirstChannel/128;
               int LastAPV = (localLastChannel-1)/128;
               for(int strip = FirstAPV*128; strip < LastAPV*128 +128; ++strip) {
@@ -245,6 +244,42 @@ SiStripDigitizerAlgorithm::accumulateSimHits(std::vector<PSimHit>::const_iterato
   if(lastChannelsWithSignal[detID] < thisLastChannelWithSignal) lastChannelsWithSignal[detID] = thisLastChannelWithSignal;
 }
 
+//============================================================================                
+void SiStripDigitizerAlgorithm::calculateInstlumiScale(PileupMixingContent* puInfo){
+  //Instlumi scalefactor calculating for dynamic inefficiency                                 
+
+  if (puInfo) {
+    const std::vector<int> bunchCrossing = puInfo->getMix_bunchCrossing();
+    const std::vector<float> TrueInteractionList = puInfo->getMix_TrueInteractions();
+    const int bunchSpacing = puInfo->getMix_bunchSpacing();                                 
+
+    double RevFreq = 11245.;
+    double minBXsec = 70.0E-27;  // use 70mb as an approximation
+    double Bunch = 2100.;        // 2016 value
+    if (bunchSpacing == 50) Bunch = Bunch/2.;
+
+    int pui = 0, p = 0;
+    std::vector<int>::const_iterator pu;
+    std::vector<int>::const_iterator pu0 = bunchCrossing.end();
+
+    for (pu=bunchCrossing.begin(); pu!=bunchCrossing.end(); ++pu) {
+      if (*pu==0) {
+        pu0 = pu;
+        p = pui;
+      }
+      pui++;
+    }
+    if (pu0!=bunchCrossing.end()) {  // found the in-time interaction
+      double Tintr = TrueInteractionList.at(p);
+      double instLumi = Bunch*Tintr*RevFreq/minBXsec;
+      APVSaturationProbScaling_ = instLumi/6.0E33;      
+    }
+  }
+}
+
+//============================================================================                
+
+
 void
 SiStripDigitizerAlgorithm::digitize(
 			   edm::DetSet<SiStripDigi>& outdigi,
@@ -273,8 +308,10 @@ SiStripDigitizerAlgorithm::digitize(
   std::vector<bool>& hipChannels = allHIPChannels[detID];
   for(int strip =0; strip < numStrips; ++strip) {
 	if(badChannels[strip]) detAmpl[strip] = 0.;
-	float scalingValue=CLHEP::RandFlat::shoot(engine)*10.0/7.0-3.0/7.0;
-	if(hipChannels[strip]) detAmpl[strip] *=scalingValue>0?scalingValue:0.0;
+	if(hipChannels[strip]) { 
+	  float scalingValue=CLHEP::RandFlat::shoot(engine)*10.0/7.0-3.0/7.0;
+	  detAmpl[strip] *=scalingValue>0?scalingValue:0.0;
+	}
   }
 
   SiStripNoises::Range detNoiseRange = noiseHandle->getRange(detID);

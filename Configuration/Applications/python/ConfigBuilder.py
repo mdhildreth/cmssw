@@ -1479,7 +1479,7 @@ class ConfigBuilder(object):
 	    if "DIGIPREMIX" in self.stepMap.keys():
 		    self.executeAndRemember("process.esDigiToRaw.Label = cms.string('mix')")  ##terrible hack - bypass zero suppression
 		    self.executeAndRemember("process.SiStripDigiToRaw.FedReadoutMode = cms.string('PREMIX_RAW')") ##special readout mode for StripTracker
-
+		    self.executeAndRemember("process.DigiToRaw.remove(process.L1TDigiToRaw)")
             return
 
     def prepare_REPACK(self, sequence = None):
@@ -1492,6 +1492,10 @@ class ConfigBuilder(object):
             assert(sequence == None)
 	    self.loadAndRemember(self.L1EMDefaultCFF)
 	    self.scheduleSequence('SimL1Emulator','L1simulation_step')
+            if "DIGIPREMIX" in self.stepMap.keys():
+		    self.executeAndRemember("process.SimL1Emulator.remove(process.SimL1TCalorimeter)")
+		    self.executeAndRemember("process.SimL1Emulator.remove(process.SimL1TechnicalTriggers)")
+		    self.executeAndRemember("process.SimL1Emulator.remove(process.SimL1TGlobal)")
 	    return
 
     def prepare_L1REPACK(self, sequence = None):

@@ -14,13 +14,14 @@
 #define L1_TRACK_TRIGGER_TRACK_FORMAT_H
 
 #include "DataFormats/L1TrackTrigger/interface/TTStub.h"
+#include "DataFormats/L1TrackTrigger/interface/TTTrack_TrackWord.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "DataFormats/Common/interface/DetSetVectorNew.h"
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
 #include "DataFormats/Phase2TrackerDigi/interface/Phase2TrackerDigi.h"
 
 template< typename T >
-class TTTrack
+class TTTrack : public TTTrack_TrackWord
 {
   private:
     /// Data members

@@ -41,6 +41,9 @@ class TTTrack : public TTTrack_TrackWord
     double       theChi25Par;
     bool         valid4ParFit;
     bool         valid5ParFit;
+    unsigned int theHitMask;
+    float        an_MVA_Value;
+    float        another_MVA_Value;
 
   public:
     /// Constructors
@@ -83,6 +86,8 @@ class TTTrack : public TTTrack_TrackWord
     void         setStubPtConsistency( double aPtConsistency, unsigned int nPar=5 );
 
     void         setFitParNo( unsigned int aFitParNo ) { return; }
+
+    void         setTrackWordBits( unsigned int aFitParNo );
 
 /*
     /// Superstrip
@@ -379,6 +384,42 @@ double TTTrack< T >::getStubPtConsistency(unsigned int nPar) const
 
 }
 
+/// Set bits in 96-bit Track word
+template< typename T >
+void TTTrack< T >::setTrackWordBits( unsigned int nPar ) 
+{
+  if (!(nPar==4||nPar==5)) {
+    edm::LogError("TTTrack") << " setTrackWordBits method is called with nPar="<<nPar<< " only possible values are 4/5" << std::endl;
+    return;
+  }
+
+  unsigned int sparebits = 0;
+
+  // missing conversion of global phi to difference from sector center phi
+
+  if (nPar==4) {
+      if(valid4ParFit) {
+	setTrackWord( theMomentum4Par, thePOCA4Par, theRInv4Par, theChi24Par, theStubPtConsistency4Par, theHitMask, sparebits );
+      }
+      else{
+	edm::LogError("TTTrack") << " setTrackWordBits method is called with nPar="<<nPar<< " but no valid fit" << std::endl;
+	return;
+      }
+  }
+
+  if (nPar==5) {
+    if(valid5ParFit) {
+      setTrackWord( theMomentum5Par, thePOCA5Par, theRInv5Par, theChi25Par, theStubPtConsistency5Par, theHitMask, sparebits );
+    }
+    else {
+	edm::LogError("TTTrack") << " setTrackWordBits method is called with nPar="<<nPar<< " but no valid fit" << std::endl;
+	return;
+    }
+  }
+
+  return;
+
+}
 
 
 

@@ -17,6 +17,15 @@
 
 TTTrack_TrackWord::TTTrack_TrackWord( const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, double theBendChi2, unsigned int theHitMask, unsigned int iSpare  ) {
 
+
+  setTrackWord( Momentum, POCA, theRinv, theChi2, theBendChi2, theHitMask, iSpare );
+
+}
+
+void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, double theBendChi2, 
+				      unsigned int theHitMask, unsigned int iSpare  ) {
+
+
   // first, derive quantities to be packed
 
   float rPhi = Momentum.phi();  // this needs to be phi relative to center of sector ****

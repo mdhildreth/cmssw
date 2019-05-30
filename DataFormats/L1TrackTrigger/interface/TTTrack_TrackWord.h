@@ -23,13 +23,14 @@ class TTTrack_TrackWord {
 
   TTTrack_TrackWord() {}
   TTTrack_TrackWord(  const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, 
-                      double theBendChi2, unsigned int theHitMask, unsigned int iSpare );
+                      double theBendChi2, unsigned int theHitPattern, unsigned int iSpare );
 
   void setTrackWord (const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2,
-		     double theBendChi2, unsigned int theHitMask, unsigned int iSpare );
+		     double theBendChi2, unsigned int theHitPattern, unsigned int iSpare );
 
 
-  // getters for unpacked and converted values
+  // getters for unpacked and converted values.  
+  // These functions return real numbers converted from the digitized quantities using the LSB defined for each.
   
   float get_iRinv();
   float get_iphi();
@@ -37,12 +38,25 @@ class TTTrack_TrackWord {
   float get_iz0();
   float get_id0();
   float get_ichi2();
-  float get_iBchi2();
+  float get_iBendChi2();
 
-  // getters for packed bits
+  // separate functions for unpacking 96-bit track word
+
+  float unpack_iRinv();
+  float unpack_iphi();
+  float unpack_ieta();
+  float unpack_iz0();
+  float unpack_id0();
+  float unpack_ichi2();
+  float unpack_iBendChi2();
+  unsigned int unpack_ispare();
+
+  // getters for packed bits. 
+  // These functions return, literally, the packed bits in integer format for each quantity.
+  // Signed quantities have the sign enconded in the left-most bit.
   
-  unsigned int get_hitmask();
-  unsigned int get_spare();  // will need a converter(s) when spare bits are defined
+  unsigned int get_hitPattern();
+  unsigned int get_ispare();  // will need a converter(s) when spare bits are defined
 
   unsigned int get_RinvBits();
   unsigned int get_phiBits();
@@ -50,11 +64,28 @@ class TTTrack_TrackWord {
   unsigned int get_z0Bits();
   unsigned int get_d0Bits();
   unsigned int get_chi2Bits();
-  unsigned int get_Bchi2Bits();
+  unsigned int get_BendChi2Bits();
  
  private:
 
   void initialize();
+
+  unsigned int digitize_Signed(float var, unsigned int minBit, unsigned int maxBit, float lsb);
+
+  float unpack_Signed(unsigned int bits, unsigned int nBits, float lsb);
+
+  // individual data members (not packed into 96 bits)
+  unsigned int iRinv;  
+  unsigned int iphi;  
+  unsigned int ieta;  
+  unsigned int iz0;  
+  unsigned int id0;  
+  unsigned int ichi2;  
+  unsigned int iBendChi2;
+  unsigned int ispare;
+
+
+  // three 32-bit packed words
 
   unsigned int TrackWord1;
   unsigned int TrackWord2;
@@ -66,12 +97,48 @@ class TTTrack_TrackWord {
   float LSBZ0;
   float LSBD0;
 
-  float chi2Bins[15];
-  float Bchi2Bins[7];
+  float chi2Bins[16];
+  float Bchi2Bins[8];
 
   unsigned int Nchi2;
   unsigned int NBchi2;
 
+  /* bits for packing: 
+  signed quantities (one bit for sign): 
+
+  q/R = 14+1 
+  phi = 11+1  (relative to sector center)
+  eta = 15+1
+  z0  = 11+1
+  d0  = 12+1                                                                                                                                                      
+
+  unsigned:
+  chi2     = 4
+  BendChi2 = 3
+  hitmask  = 7
+  Spare    = 14 
+
+  */
+
+  // signed quantities: total bits are these values plus one
+  const unsigned int NCurvBits = 14;
+  const unsigned int NPhiBits  = 11;
+  const unsigned int NEtaBits  = 15;
+  const unsigned int NZ0Bits   = 11;
+  const unsigned int ND0Bits   = 12;
+  
+  // unsigned:
+  const unsigned int NChi2Bits = 4;
+  const unsigned int NBChi2Bits= 3;
+  const unsigned int NHitsBits = 7;
+  const unsigned int NSpareBits= 14;
+
+  // establish binning                                                                                                                                             
+  const float maxCurv = 0.5;  // 2 GeV pT                                                                                                                                
+  const float maxPhi  = 0.35; // relative to the center of the sector                                                                                                    
+  const float maxEta  = 2.5;
+  const float maxZ0   = 20.;
+  const float maxD0   = 15.;
 
   
 }; // end of class def

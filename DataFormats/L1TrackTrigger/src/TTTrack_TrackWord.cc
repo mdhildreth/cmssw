@@ -15,15 +15,15 @@
 
 //Constructor - turn track parameters into 96-bit word
 
-TTTrack_TrackWord::TTTrack_TrackWord( const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, double theBendChi2, unsigned int theHitMask, unsigned int iSpare  ) {
+TTTrack_TrackWord::TTTrack_TrackWord( const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, double theBendChi2, unsigned int theHitPattern, unsigned int iSpare  ) {
 
 
-  setTrackWord( Momentum, POCA, theRinv, theChi2, theBendChi2, theHitMask, iSpare );
+  setTrackWord( Momentum, POCA, theRinv, theChi2, theBendChi2, theHitPattern, iSpare );
 
 }
 
 void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, double theBendChi2, 
-				      unsigned int theHitMask, unsigned int iSpare  ) {
+				      unsigned int theHitPattern, unsigned int iSpare  ) {
 
 
   // first, derive quantities to be packed
@@ -35,77 +35,121 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
 
   // bin, convert to integers, and pack
 
-   /*
-    Current packing scheme. Any changes here ripple everywhere!
-    
-    uint word1 = 16 (eta) + 12 (z0) + 4 (chi2) = 32 bits
-    uint word2 = 12 (phi) + 13 (d0) + 7 (hitmask) = 32 bits
-    uint word3 = 15 (pT) + 3 (bend chi2) + 14 (spare/TMVA) = 32 bits
-   */
-  
-
-  int isign;
   unsigned int seg1, seg2, seg3;
   seg1 = 0; seg2 = 0; seg3 = 0;
 
   // first 32-bit word
 
   //eta
-  isign = (rEta<0);
 
-  int myEta = int(fabs(rEta)/LSBEta);
+  ieta = digitize_Signed(rEta,NEtaBits,0,LSBEta);
+
+  /* isign = (rEta<0);
+
+  int myEta = std::floor(fabs(rEta)/LSBEta);
   if(myEta > 0x7FFF) myEta = 0x7FFF;
   if(isign>0) isign = (isign<<15);
-  myEta = isign+myEta;
-  seg1 = (myEta << 16);
+  myEta = isign+myEta; */
+
 
   //z0
+  iz0 = digitize_Signed(rZ0,NZ0Bits,0,LSBZ0);
+    /*
   isign = (rZ0<0);
-
-  int myZ0 = int(fabs(rZ0)/LSBZ0);
+  int myZ0 = std::floor(fabs(rZ0)/LSBZ0);
   if(myZ0 > 0x7FF) myZ0 = 0x7FF;
   if(isign>0) isign = (isign<<11);
-  myZ0 = isign+myZ0;
-  seg2 = (myZ0 << 4);
+  myZ0 = isign+myZ0; */
+
 
     //chi2 has non-linear bins
   
-  unsigned int myChi2 = 0;
+  ichi2 = 0;
   
   for(unsigned int ibin=0; ibin<Nchi2; ++ibin) {
-    myChi2 = ibin; 
+    ichi2 = ibin; 
     if(theChi2<chi2Bins[ibin]) break;
   }
 
-  seg3 = myChi2;
+  
+
+
+  //phi
+
+  iphi = digitize_Signed(rPhi,NPhiBits,0,LSBPhi);
+
+  /*
+  isign = (rPhi<0);
+  int myPhi = std::floor(fabs(rPhi)/LSBPhi);
+  if(myPhi > 0x7FF) myPhi = 0x7FF;
+  if(isign>0) isign = (isign<<11);
+  myPhi = isign+myPhi; */
+
+
+  //d0
+
+  id0 = digitize_Signed(rD0,ND0Bits,0,LSBD0);
+
+  /*
+  isign = (rD0<0);
+  int myD0 = std::floor(fabs(rD0)/LSBD0);
+  if(myD0 > 0xFFF) myD0 = 0xFFF;
+  if(isign>0) isign = (isign<<12);
+  myD0 = isign+myD0; */
+
+  //Rinv
+
+  iRinv = digitize_Signed(theRinv,NCurvBits,0,LSBCurv);
+
+  /*
+  isign = (theRinv<0);  
+  int myCurv = int(fabs(theRinv)/LSBCurv);
+  if(myCurv > 0x3FFF) myCurv = 0x3FFF;
+  if(isign>0) isign = (isign<<14);
+  myCurv = isign+myCurv;  */
+
+
+
+
+  //bend chi2 - non-linear bins
+  iBendChi2 = 0;
+  
+  for(unsigned int ibin=0; ibin<NBchi2; ++ibin) {
+    iBendChi2 = ibin; 
+    if(theBendChi2<Bchi2Bins[ibin]) break;
+  }
+
+  ispare = iSpare;
+
+  // spare bits
+  if(ispare > 0x3FFF) ispare = 0x3FFF;
+
+     //set bits
+   /*
+    Current packing scheme. Any changes here ripple everywhere!
+    
+    uint word1 = 16 (eta) + 12 (z0) + 4 (chi2) = 32 bits
+    uint word2 = 12 (phi) + 13 (d0) + 7 (hitPattern) = 32 bits
+    uint word3 = 15 (pT) + 3 (bend chi2) + 14 (spare/TMVA) = 32 bits
+   */
+
+  //now pack bits
+
+  seg1 = (ieta << 16);  //take care of word packing later...  
+  seg2 = (iz0 << 4);
+  seg3 = ichi2;
 
     //set bits
   
   TrackWord1 = seg1 + seg2 + seg3;
   seg1 = 0; seg2 = 0; seg3 = 0;
-  
+
   //second 32-bit word
-
-  //phi
-  isign = (rPhi<0);
-
-  int myPhi = int(fabs(rPhi)/LSBPhi);
-  if(myPhi > 0x7FF) myPhi = 0x7FF;
-  if(isign>0) isign = (isign<<11);
-  myPhi = isign+myPhi;
-  seg1 = (myPhi << 20);
-
-  isign = (rD0<0);
-
-  //d0
-  int myD0 = int(fabs(rD0)/LSBD0);
-  if(myD0 > 0xFFF) myD0 = 0xFFF;
-  if(isign>0) isign = (isign<<12);
-  myD0 = isign+myD0;
-  seg2 = (myD0 << 7);
+  seg1 = (iphi << 20);
+  seg2 = (id0 << 7);
 
   //HitMask
-  seg3 = theHitMask;
+  seg3 = theHitPattern;
 
     //set bits
 
@@ -114,137 +158,162 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
 
   //third 32-bit word
 
-  //Rinv
-  isign = (theRinv<0);
-  
-  int myCurv = int(fabs(theRinv)/LSBCurv);
-  if(myCurv > 0x3FFF) myCurv = 0x3FFF;
-  if(isign>0) isign = (isign<<14);
-  myCurv = isign+myCurv;
-  seg1 = (myCurv << 17);
+  seg1 = (iRinv << 17);
+  seg2 = (iBendChi2<<14);
+  seg3 = ispare;
 
-  //bend chi2 - non-linear bins
-  unsigned int myBchi2 = 0;
-  
-  for(unsigned int ibin=0; ibin<NBchi2; ++ibin) {
-    myBchi2 = ibin; 
-    if(theBendChi2<Bchi2Bins[ibin]) break;
-  }
-
-  seg2 = (myBchi2<<14);
-
-  // spare bits
-  if(iSpare > 0x3FFF) iSpare = 0x3FFF;
-  seg3 = iSpare;
-
-     //set bits
 
   TrackWord3 = seg1 + seg2 + seg3;
   
 }
   // unpack
 
-float TTTrack_TrackWord::get_ieta(){
-  int isign = 1;
+float TTTrack_TrackWord::unpack_ieta(){
   unsigned int bits =  (TrackWord1 & 0xFFFF0000) >> 16;
-  float unpEta = (bits & 0x7FFF)*LSBEta;
-  if (bits - (bits & 0x7FFF) > 0 ) isign = -1;
-  unpEta = isign * unpEta;
+  float unpEta = unpack_Signed(bits, NEtaBits, LSBEta);
+  return unpEta;
+}
+
+float TTTrack_TrackWord::get_ieta(){
+  float unpEta = unpack_Signed(ieta, NEtaBits, LSBEta);
   return unpEta;
 }
 
 unsigned int TTTrack_TrackWord::get_etaBits(){
-  unsigned int bits =  (TrackWord1 & 0xFFFF0000) >> 16;
-  return bits;
+  //unsigned int bits =  (TrackWord1 & 0xFFFF0000) >> 16;
+  return ieta;
+}
+
+float TTTrack_TrackWord::unpack_iz0(){
+  unsigned int bits =   (TrackWord1 & 0x0000FFF0) >> 4;
+  float unpZ0 = unpack_Signed(bits, NZ0Bits, LSBZ0);
+  return unpZ0;
 }
 
 float TTTrack_TrackWord::get_iz0(){
-  int isign = 1;
-  unsigned int bits =   (TrackWord1 & 0x0000FFF0) >> 4;
-  float unpZ0 = (bits & 0x7FF)*LSBZ0;
-  if (bits - (bits & 0x7FF) > 0 ) isign = -1;
-  unpZ0 = isign * unpZ0;
+  float unpZ0 = unpack_Signed(iz0, NZ0Bits, LSBZ0);
   return unpZ0;
 }
 
 unsigned int TTTrack_TrackWord::get_z0Bits(){
-  unsigned int bits =   (TrackWord1 & 0x0000FFF0) >> 4;
-  return bits;
+  //unsigned int bits =   (TrackWord1 & 0x0000FFF0) >> 4;
+  return iz0;
 }
 
-float TTTrack_TrackWord::get_ichi2(){
+float TTTrack_TrackWord::unpack_ichi2(){
   unsigned int bits = (TrackWord1 & 0x0000000F);
   float unpChi2 = chi2Bins[bits];
   return unpChi2;
 }
 
+float TTTrack_TrackWord::get_ichi2(){
+  float unpChi2 = chi2Bins[ichi2];
+  return unpChi2;
+}
+
 unsigned int TTTrack_TrackWord::get_chi2Bits(){
-  unsigned int bits = (TrackWord1 & 0x0000000F);
-  return bits;
+  //unsigned int bits = (TrackWord1 & 0x0000000F);
+  return ichi2;
+}
+
+float TTTrack_TrackWord::unpack_iphi(){
+  unsigned int bits =   (TrackWord2 & 0xFFF00000) >> 20;
+  float unpPhi = unpack_Signed(bits, NPhiBits, LSBPhi);
+  return unpPhi;
 }
 
 float TTTrack_TrackWord::get_iphi(){
-  int isign = 1;
-  unsigned int bits =   (TrackWord2 & 0xFFF00000) >> 20;
-  float unpPhi = (bits & 0x7FF)*LSBPhi;
-  if (bits - (bits & 0x7FF) > 0 ) isign = -1;
-  unpPhi = isign * unpPhi;
+  float unpPhi = unpack_Signed(iphi, NPhiBits, LSBPhi);
   return unpPhi;
 }
 
 unsigned int TTTrack_TrackWord::get_phiBits(){
-  unsigned int bits =   (TrackWord2 & 0xFFF00000) >> 20;
-  return bits;
+  //unsigned int bits =   (TrackWord2 & 0xFFF00000) >> 20;
+  return iphi;
+}
+
+float TTTrack_TrackWord::unpack_id0(){
+  unsigned int bits =   (TrackWord2 & 0x000FFF80) >> 7;
+  float unpD0 = unpack_Signed(bits, ND0Bits, LSBD0);
+  return unpD0;
 }
 
 float TTTrack_TrackWord::get_id0(){
-  int isign = 1;
-  unsigned int bits =   (TrackWord2 & 0x000FFF80) >> 7;
-  float unpD0 = (bits & 0xFFF)*LSBD0;
-  if (bits - (bits & 0xFFF) > 0 ) isign = -1;
-  unpD0 = isign * unpD0;
+  float unpD0 = unpack_Signed(id0, ND0Bits, LSBD0);
   return unpD0;
 }
 
 unsigned int TTTrack_TrackWord::get_d0Bits(){
-  unsigned int bits =   (TrackWord2 & 0x000FFF80) >> 7;
-  return bits;
+  //  unsigned int bits =   (TrackWord2 & 0x000FFF80) >> 7;
+  return id0;
 }
 
-unsigned int TTTrack_TrackWord::get_hitmask(){
+unsigned int TTTrack_TrackWord::get_hitPattern(){
   unsigned int bits = (TrackWord2 & 0x0000007F);
   return bits;
 }
 
-float TTTrack_TrackWord::get_iRinv(){
-  int isign = 1;
+float TTTrack_TrackWord::unpack_iRinv(){
   unsigned int bits =   (TrackWord3 & 0xFFFE0000) >> 17;
-  float unpCurv = (bits & 0x3FFF)*LSBCurv;
-  if (bits - (bits & 0x3FFF) > 0 ) isign = -1;
-  unpCurv = isign * unpCurv;
+  float unpCurv = unpack_Signed(bits, NCurvBits, LSBCurv);
   return unpCurv;
 }
 
-float TTTrack_TrackWord::get_iBchi2(){
+float TTTrack_TrackWord::get_iRinv(){
+  float unpCurv = unpack_Signed(iRinv, NCurvBits, LSBCurv);
+  return unpCurv;
+}
+
+float TTTrack_TrackWord::unpack_iBendChi2(){
   unsigned int bits =   (TrackWord3 & 0x0001C000) >> 14;
   float unpBChi2 = Bchi2Bins[bits];
   return unpBChi2;
 }
 
-unsigned int TTTrack_TrackWord::get_Bchi2Bits(){
+float TTTrack_TrackWord::get_iBendChi2(){
+  float unpBChi2 = Bchi2Bins[iBendChi2];
+  return unpBChi2;
+}
+
+unsigned int TTTrack_TrackWord::get_BendChi2Bits(){
   unsigned int bits =   (TrackWord3 & 0x0001C000) >> 14;
   return bits;
 }
 
-unsigned int TTTrack_TrackWord::get_spare(){
+unsigned int TTTrack_TrackWord::unpack_ispare(){
   unsigned int bits =   (TrackWord3 & 0x00003FFF);
   return bits;
 }
 
+unsigned int TTTrack_TrackWord::get_ispare(){
+  return ispare;
+}
+
+unsigned int TTTrack_TrackWord::digitize_Signed(float var, unsigned int minBit, unsigned int maxBit, float lsb) {
+  unsigned int nBits = (maxBit - minBit + 1);
+  unsigned int myVar = std::floor(fabs(var)/lsb);
+  int isign = (var < 0);
+  unsigned int maxVal = (1 << nBits) -1 ;
+  if (myVar > maxVal)  myVar = maxVal;
+  if(isign>0) isign = (isign<<(nBits));
+  unsigned int seg = ((isign+myVar) << minBit);
+  return seg;
+}
+
+float TTTrack_TrackWord::unpack_Signed(unsigned int bits, unsigned int nBits, float lsb) {
+  int isign = 1;
+  unsigned int maxVal = (1 << nBits) -1 ;
+  float unpacked = (float(bits & maxVal)+0.5)*lsb;
+  if (bits & (1<<nBits)) isign = -1;
+  unpacked = isign * unpacked;
+  return unpacked;
+}
+
+
 
 void TTTrack_TrackWord::initialize(){
 
-  /* bits for packing:
+  /* bits for packing, constants defined in TTTrack_TrackWord.h :
 
   signed quantities (one bit for sign):
   
@@ -258,29 +327,21 @@ void TTTrack_TrackWord::initialize(){
 
   chi2     = 4
   BendChi2 = 3
-  hitmask  = 7
+  hitPattern  = 7
   Spare    = 14
 
   */
 
   // define bits, 1<<N = 2^N
 
-  unsigned int CurvBins = (1<<14);
-  unsigned int phiBins  = (1<<11);
-  unsigned int etaBins  = (1<<15);
-  unsigned int z0Bins   = (1<<11);
-  unsigned int d0Bins   = (1<<12);
-  Nchi2    = (1<<4);
-  NBchi2   = (1<<3);
+  unsigned int CurvBins = (1<<NCurvBits);
+  unsigned int phiBins  = (1<<NPhiBits);
+  unsigned int etaBins  = (1<<NEtaBits);
+  unsigned int z0Bins   = (1<<NZ0Bits);
+  unsigned int d0Bins   = (1<<ND0Bits);
 
-  
-  // establish binning
-
-  float maxCurv = 0.5;  // 2 GeV pT
-  float maxPhi  = 0.35; // relative to the center of the sector
-  float maxEta  = 2.5;
-  float maxZ0   = 20.;
-  float maxD0   = 15.;
+  Nchi2    = (1<<NChi2Bits);
+  NBchi2   = (1<<NBChi2Bits);
 
   LSBCurv = maxCurv/float(CurvBins);
   LSBPhi  = maxPhi/float(phiBins);

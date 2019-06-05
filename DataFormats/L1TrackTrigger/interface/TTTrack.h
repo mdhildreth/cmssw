@@ -88,11 +88,6 @@ class TTTrack : public TTTrack_TrackWord
     /// Here to prepare inclusion of AM L1 Track finding
     uint32_t getSuperStrip() const { return 0; }
 */
-    /// Duplicate identification
-    bool isTheSameAs( TTTrack< T > aTrack ) const;
-
-    /// Additional quality criteria
-    bool hasStubInBarrel( unsigned int aLayer ) const;
 
     /// Information
     std::string print( unsigned int i = 0 ) const;
@@ -294,48 +289,6 @@ void TTTrack< T >::setTrackWordBits()
 
 }
 
-
-
-
-/// Duplicate identification
-template< typename T>
-bool TTTrack< T >::isTheSameAs( TTTrack< T > aTrack ) const
-{
-  /// Take the other stubs
-  std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > >, TTStub< T > > > otherStubRefs = aTrack.getStubRefs();
-
-  /// Count shared stubs
-  unsigned int nShared = 0;
-  for ( unsigned int i = 0; i < theStubRefs.size() && nShared < 2; i++)
-  {
-    for ( unsigned int j = 0; j < otherStubRefs.size() && nShared < 2; j++)
-    {
-      if ( theStubRefs.at(i) == otherStubRefs.at(j) )
-      {
-        nShared++;
-      }
-    }
-  }
-
-  /// Same track if 2 shared stubs
-  return ( nShared > 1 );
-}
-
-/// Quality criteria: does it have a Stub in a specific Barrel Layer?
-template< typename T >
-bool TTTrack< T >::hasStubInBarrel( unsigned int aLayer ) const
-{
-  for ( unsigned int i = 0; i < theStubRefs.size(); i++)
-  {
-    DetId detid =  theStubRefs.at(i)->getDetId();
-    if ( detid.subdetId()==StripSubdetector::TOB )
-    {
-      return true;
-    }
-  }
-
-  return false;
-}
 
 
 /// Information

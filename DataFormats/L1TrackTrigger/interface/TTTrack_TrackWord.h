@@ -25,6 +25,10 @@ class TTTrack_TrackWord {
   TTTrack_TrackWord(  const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, 
                       double theBendChi2, unsigned int theHitPattern, unsigned int iSpare );
 
+  TTTrack_TrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int tanl, unsigned int z0, unsigned int d0,
+		      unsigned int theChi2, unsigned int theBendChi2, unsigned int theHitPattern, unsigned int iSpare );
+
+
   void setTrackWord (const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2,
 		     double theBendChi2, unsigned int theHitPattern, unsigned int iSpare );
 
@@ -50,6 +54,7 @@ class TTTrack_TrackWord {
   float unpack_ichi2();
   float unpack_iBendChi2();
   unsigned int unpack_ispare();
+  unsigned int unpack_hitPattern();
 
   // getters for packed bits. 
   // These functions return, literally, the packed bits in integer format for each quantity.
@@ -83,7 +88,7 @@ class TTTrack_TrackWord {
   unsigned int ichi2;  
   unsigned int iBendChi2;
   unsigned int ispare;
-
+  unsigned int iHitPattern;
 
   // three 32-bit packed words
 

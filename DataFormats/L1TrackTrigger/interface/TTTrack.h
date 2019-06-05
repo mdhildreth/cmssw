@@ -35,7 +35,7 @@ class TTTrack : public TTTrack_TrackWord
     double       theStubPtConsistency;
     double       theChi2;
     unsigned int NumFitPars;
-    unsigned int theHitMask;
+    unsigned int theHitPattern;
     float        an_MVA_Value;
     float        another_MVA_Value;
 
@@ -43,6 +43,8 @@ class TTTrack : public TTTrack_TrackWord
     /// Constructors
     TTTrack();
     TTTrack( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > >, TTStub< T > > > aStubs );
+
+    TTTrack( double aRinv, double aphi, double atanl, double az0, double ad0, double aChi2, unsigned int nPar);
 
     /// Destructor
     ~TTTrack();
@@ -53,41 +55,36 @@ class TTTrack : public TTTrack_TrackWord
     void setStubRefs( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > >, TTStub< T > > > aStubs ) { theStubRefs = aStubs; }
 
     /// Track momentum
-    GlobalVector getMomentum() const;
+    GlobalVector Momentum() const;
     void         setMomentum( GlobalVector aMomentum);
 
     /// Track curvature
-    double getRInv() const;
+    double RInv() const;
     void   setRInv( double aRInv );
 
     /// POCA
-    GlobalPoint getPOCA() const;
+    GlobalPoint POCA() const;
     void        setPOCA( GlobalPoint aPOCA );
 
     /// Sector
-    unsigned int getSector() const                 { return theSector; }
+    unsigned int Sector() const                 { return theSector; }
     void         setSector( unsigned int aSector ) { theSector = aSector; }
-    unsigned int getWedge() const                  { return theWedge; }
+    unsigned int Wedge() const                  { return theWedge; }
     void         setWedge( unsigned int aWedge )   { theWedge = aWedge; }
 
     /// Chi2
-    double       getChi2() const;
-    double       getChi2Red() const;
+    double       Chi2() const;
+    double       Chi2Red() const;
     void         setChi2( double aChi2 );
 
     /// Stub Pt consistency
-    double       getStubPtConsistency() const;
+    double       StubPtConsistency() const;
     void         setStubPtConsistency( double aPtConsistency );
 
     void         setFitParNo( unsigned int aFitParNo );
 
     void         setTrackWordBits();
 
-/*
-    /// Superstrip
-    /// Here to prepare inclusion of AM L1 Track finding
-    uint32_t getSuperStrip() const { return 0; }
-*/
 
     /// Information
     std::string print( unsigned int i = 0 ) const;
@@ -132,6 +129,24 @@ TTTrack< T >::TTTrack( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > 
   NumFitPars  = 0;
 }
 
+
+template< typename T >
+TTTrack< T >::TTTrack( double aRinv, double aphi, double atanl, double az0, double ad0, double aChi2, unsigned int aHitPattern, unsigned int nPar);
+{
+  theStubRefs.clear();
+  theMomentum = GlobalVector(0.0,0.0,0.0);
+  theRInv     = aRinv
+  thePOCA     = GlobalPoint(ad0*cos(aphi),ad0*sin(aphi),az0);
+  theSector   = 0;
+  theWedge    = 0;
+  theChi2     = aChi2;
+  theStubPtConsistency = 0.0;
+  NumFitPars  = nPar;
+  theHitPattern = aHitPattern;
+  // should probably fill the momentum vectur
+}
+
+
 /// Destructor
 template< typename T >
 TTTrack< T >::~TTTrack(){}
@@ -157,7 +172,7 @@ void TTTrack< T >::setMomentum( GlobalVector aMomentum ) {
 
 
 template< typename T >
-GlobalVector TTTrack< T >::getMomentum() const{
+GlobalVector TTTrack< T >::Momentum() const{
 
   if (NumFitPars==5 || NumFitPars ==4) {
     return theMomentum;
@@ -178,7 +193,7 @@ void TTTrack< T >::setRInv(double aRInv) {
 
 
 template< typename T >
-double TTTrack< T >::getRInv() const {
+double TTTrack< T >::RInv() const {
 
   if (NumFitPars==5 || NumFitPars ==4) {
     return theRInv;
@@ -198,7 +213,7 @@ void TTTrack< T >::setPOCA(GlobalPoint aPOCA){
 }
 
 template< typename T >
-GlobalPoint TTTrack< T >::getPOCA() const
+GlobalPoint TTTrack< T >::POCA() const
 {
 
   if (NumFitPars==5 || NumFitPars ==4) {
@@ -222,7 +237,7 @@ void TTTrack< T >::setChi2(double aChi2) {
 
 /// Chi2 
 template< typename T >
-double TTTrack< T >::getChi2() const
+double TTTrack< T >::Chi2() const
 {
 
   if (NumFitPars==5 || NumFitPars ==4) {
@@ -236,7 +251,7 @@ double TTTrack< T >::getChi2() const
 
 /// Chi2 reduced
 template< typename T >
-double TTTrack< T >::getChi2Red() const
+double TTTrack< T >::Chi2Red() const
 {
 
   if (NumFitPars==5 || NumFitPars ==4) {
@@ -261,7 +276,7 @@ void TTTrack< T >::setStubPtConsistency(double aStubPtConsistency) {
 
 /// StubPtConsistency 
 template< typename T >
-double TTTrack< T >::getStubPtConsistency() const
+double TTTrack< T >::StubPtConsistency() const
 {
 
   if (NumFitPars==5 || NumFitPars ==4) {
@@ -283,7 +298,7 @@ void TTTrack< T >::setTrackWordBits()
 
   // missing conversion of global phi to difference from sector center phi
 
-  setTrackWord( theMomentum, thePOCA, theRInv, theChi2, theStubPtConsistency, theHitMask, sparebits );
+  setTrackWord( theMomentum, thePOCA, theRInv, theChi2, theStubPtConsistency, theHitPattern, sparebits );
 
   return;
 

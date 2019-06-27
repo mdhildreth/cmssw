@@ -30,21 +30,25 @@ class TTTrack : public TTTrack_TrackWord
     GlobalVector theMomentum;
     GlobalPoint  thePOCA;
     double       theRInv;
-    unsigned int theSector;
-    unsigned int theWedge;
+    double       thePhi;
+    double       theTanL;
+    double       theD0;
+    double       theZ0;
+    unsigned int thePhiSector;
     double       theStubPtConsistency;
     double       theChi2;
     unsigned int NumFitPars;
     unsigned int theHitPattern;
     float        an_MVA_Value;
     float        another_MVA_Value;
-
+    int          theTrackSeed;
+    
   public:
     /// Constructors
     TTTrack();
     TTTrack( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > >, TTStub< T > > > aStubs );
 
-    TTTrack( double aRinv, double aphi, double atanl, double az0, double ad0, double aChi2, unsigned int nPar);
+    TTTrack( double aRinv, double aphi, double aeta, double az0, double ad0, double aChi2, unsigned int theHitpattern, unsigned int nPar);
 
     /// Destructor
     ~TTTrack();
@@ -60,18 +64,37 @@ class TTTrack : public TTTrack_TrackWord
 
     /// Track curvature
     double RInv() const;
+    
+    /// Track phi
+    double phi() const;
+
+    /// Track tanL
+    double TanL() const;
+    
+    /// Track d0
+    double d0() const;
+    
+    /// Track z0
+    double z0() const;
+
+    /// Track eta
+    double eta() const;
+
     void   setRInv( double aRInv );
 
     /// POCA
     GlobalPoint POCA() const;
     void        setPOCA( GlobalPoint aPOCA );
 
-    /// Sector
-    unsigned int Sector() const                 { return theSector; }
-    void         setSector( unsigned int aSector ) { theSector = aSector; }
-    unsigned int Wedge() const                  { return theWedge; }
-    void         setWedge( unsigned int aWedge )   { theWedge = aWedge; }
+    /// Phi Sector
+    unsigned int PhiSector() const                 { return thePhiSector; }
+    void         setPhiSector( unsigned int aSector ) { thePhiSector = aSector; }
 
+    /// Track seeding (for debugging)
+    unsigned int TrackSeed() const                 { return theTrackSeed; }
+    void         setTrackSeed( int aSeed ) { theTrackSeed = aSeed; }
+    
+    
     /// Chi2
     double       Chi2() const;
     double       Chi2Red() const;
@@ -84,7 +107,7 @@ class TTTrack : public TTTrack_TrackWord
     void         setFitParNo( unsigned int aFitParNo );
 
     void         setTrackWordBits();
-
+    void         testTrackWordBits();
 
     /// Information
     std::string print( unsigned int i = 0 ) const;
@@ -107,10 +130,9 @@ TTTrack< T >::TTTrack()
   theMomentum = GlobalVector(0.0,0.0,0.0);
   theRInv     = 0.0;
   thePOCA     = GlobalPoint(0.0,0.0,0.0);
-  theSector   = 0;
-  theWedge    = 0;
-  theChi2     = 0.0;
-  theStubPtConsistency = 0.0;
+  thePhiSector   = 0;
+  theTrackSeed   = 0;
+  theChi2     = 0.0;  theStubPtConsistency = 0.0;
   NumFitPars  = 0;
 }
 
@@ -122,8 +144,8 @@ TTTrack< T >::TTTrack( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > 
   theMomentum = GlobalVector(0.0,0.0,0.0);
   theRInv     = 0.0;
   thePOCA     = GlobalPoint(0.0,0.0,0.0);
-  theSector   = 0;
-  theWedge    = 0;
+  thePhiSector   = 0;
+  theTrackSeed   = 0;
   theChi2     = 0.0;
   theStubPtConsistency = 0.0;
   NumFitPars  = 0;
@@ -131,14 +153,14 @@ TTTrack< T >::TTTrack( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > 
 
 
 template< typename T >
-TTTrack< T >::TTTrack( double aRinv, double aphi, double atanl, double az0, double ad0, double aChi2, unsigned int aHitPattern, unsigned int nPar);
+TTTrack< T >::TTTrack( double aRinv, double aphi, double aeta, double az0, double ad0, double aChi2, unsigned int aHitPattern, unsigned int nPar)
 {
   theStubRefs.clear();
   theMomentum = GlobalVector(0.0,0.0,0.0);
-  theRInv     = aRinv
+  theRInv     = aRinv;
   thePOCA     = GlobalPoint(ad0*cos(aphi),ad0*sin(aphi),az0);
-  theSector   = 0;
-  theWedge    = 0;
+  thePhiSector   = 0;
+  theTrackSeed   = 0;
   theChi2     = aChi2;
   theStubPtConsistency = 0.0;
   NumFitPars  = nPar;
@@ -197,6 +219,46 @@ double TTTrack< T >::RInv() const {
 
   if (NumFitPars==5 || NumFitPars ==4) {
     return theRInv;
+  }
+  else return 0.0;
+
+}
+
+template< typename T >
+double TTTrack< T >::TanL() const {
+
+  if (NumFitPars==5 || NumFitPars ==4) {
+    return theTanL;
+  }
+  else return 0.0;
+
+}
+
+template< typename T >
+double TTTrack< T >::phi() const {
+
+  if (NumFitPars==5 || NumFitPars ==4) {
+    return thePhi;
+  }
+  else return 0.0;
+
+}
+
+template< typename T >
+double TTTrack< T >::d0() const {
+
+  if (NumFitPars==5 || NumFitPars ==4) {
+    return theD0;
+  }
+  else return 0.0;
+
+}
+
+template< typename T >
+double TTTrack< T >::z0() const {
+
+  if (NumFitPars==5 || NumFitPars ==4) {
+    return theZ0;
   }
   else return 0.0;
 
@@ -299,6 +361,28 @@ void TTTrack< T >::setTrackWordBits()
   // missing conversion of global phi to difference from sector center phi
 
   setTrackWord( theMomentum, thePOCA, theRInv, theChi2, theStubPtConsistency, theHitPattern, sparebits );
+
+  return;
+
+}
+
+/// Test bits in 96-bit Track word
+template< typename T >
+void TTTrack< T >::testTrackWordBits() 
+{
+
+
+  float rPhi = theMomentum.phi();  // this needs to be phi relative to center of sector **** 
+  float rEta = theMomentum.eta();
+  float rZ0 = thePOCA.z();
+  float rD0 = thePOCA.perp();
+  
+  std::cout << " phi " <<  rPhi << " " << get_iphi() << std::endl;
+  std::cout << " eta " <<  rEta << " " << get_ieta() << std::endl; 
+  std::cout << " Z0 " <<  rZ0 << " " << get_iz0() << std::endl; 
+  std::cout << " D0 " << rD0 << " " << get_id0() << std::endl; 
+  std::cout << " Rinv " << theRInv << " " << get_iRinv() << std::endl; 
+  std::cout << " chi2 " <<  theChi2 << " " << get_ichi2() << std::endl; 
 
   return;
 

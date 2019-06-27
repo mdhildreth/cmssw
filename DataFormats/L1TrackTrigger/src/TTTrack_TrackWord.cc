@@ -10,6 +10,7 @@
 
 #include "DataFormats/L1TrackTrigger/interface/TTTrack_TrackWord.h"
 #include <iostream>
+#include <bitset>
 #include <string>
 
 
@@ -35,12 +36,32 @@ TTTrack_TrackWord::TTTrack_TrackWord(  unsigned int theRinv, unsigned int phi0, 
   ispare(iSpare),
   iHitPattern(theHitPattern)
 {
-
+  initialize();  
 }
 
+// one for already-digitized values:
+
+void TTTrack_TrackWord::setTrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int tanl, unsigned int z0, 
+				       unsigned int d0, unsigned int theChi2, unsigned int theBendChi2, 
+				       unsigned int theHitPattern, unsigned int iSpare ) {
+  iRinv = theRinv;  // also wrong? double check
+  iphi = phi0;
+  ieta = tanl;      //wrong! FIX
+  iz0 = z0;
+  id0 = d0;
+  ichi2 = theChi2;  //revert to other packing?  Or will be unpacked wrong
+  iBendChi2 = theBendChi2; // revert to ogher packing? Or will be unpacked wrong
+  ispare = iSpare;
+  iHitPattern = theHitPattern;
+
+  initialize();
+}
+
+// one for floats:
 void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2, double theBendChi2, 
 				      unsigned int theHitPattern, unsigned int iSpare  ) {
 
+  initialize();
 
   // first, derive quantities to be packed
 
@@ -56,6 +77,8 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
 
 
   //eta
+
+  std::cout << " digitizing eta " << NEtaBits << std::endl;
   ieta = digitize_Signed(rEta,NEtaBits,0,LSBEta);
 
   //z0
@@ -69,14 +92,17 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
     ichi2 = ibin; 
     if(theChi2<chi2Bins[ibin]) break;
   }
+  std::cout << "chi2: " << theChi2 << " chi2 bin " << ichi2 << std::endl;
 
   //phi
+  std::cout << " digitizing phi " << std::endl;
   iphi = digitize_Signed(rPhi,NPhiBits,0,LSBPhi);
 
   //d0
   id0 = digitize_Signed(rD0,ND0Bits,0,LSBD0);
 
   //Rinv
+  std::cout << " digitizing Rinv " << std::endl;
   iRinv = digitize_Signed(theRinv,NCurvBits,0,LSBCurv);
 
   //bend chi2 - non-linear bins
@@ -94,7 +120,7 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
 
   iHitPattern = theHitPattern;
 
-     //set bits
+  //set bits
    /*
     Current packing scheme. Any changes here ripple everywhere!
     
@@ -263,22 +289,29 @@ unsigned int TTTrack_TrackWord::get_ispare(){
   return ispare;
 }
 
-unsigned int TTTrack_TrackWord::digitize_Signed(float var, unsigned int minBit, unsigned int maxBit, float lsb) {
+unsigned int TTTrack_TrackWord::digitize_Signed(float var, unsigned int maxBit, unsigned int minBit, float lsb) {
   unsigned int nBits = (maxBit - minBit + 1);
+  std::cout << " input " << var << std::endl;
+  std::cout << " nBits " << nBits << " LSB " << lsb << std::endl;
   unsigned int myVar = std::floor(fabs(var)/lsb);
-  int isign = (var < 0);
-  unsigned int maxVal = (1 << nBits) -1 ;
+  unsigned int maxVal = (1 << (nBits-1)) -1 ;
+  std::cout << " maxVal " << maxVal << std::endl;
   if (myVar > maxVal)  myVar = maxVal;
-  if(isign>0) isign = (isign<<(nBits));
-  unsigned int seg = ((isign+myVar) << minBit);
-  return seg;
+  if(var<0) myVar = (1 << nBits)-myVar;   // two's complement encoding
+  std::cout << " my var " <<  std::bitset<16>(myVar) << std::endl;
+  unsigned int seg = myVar;
+  std::cout << " seg " << std::bitset<16>(seg) << std::endl;
+  return seg;  
 }
 
 float TTTrack_TrackWord::unpack_Signed(unsigned int bits, unsigned int nBits, float lsb) {
   int isign = 1;
   unsigned int maxVal = (1 << nBits) -1 ;
+  if (bits & (1<<nBits)) {  //check sign
+      isign = -1;
+      bits = (1 << (nBits+1))-bits;  // if negative, flip everything for two's complement encoding
+  }
   float unpacked = (float(bits & maxVal)+0.5)*lsb;
-  if (bits & (1<<nBits)) isign = -1;
   unpacked = isign * unpacked;
   return unpacked;
 }

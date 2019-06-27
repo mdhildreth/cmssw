@@ -32,6 +32,10 @@ class TTTrack_TrackWord {
   void setTrackWord (const GlobalVector& Momentum, const GlobalPoint& POCA, double theRinv, double theChi2,
 		     double theBendChi2, unsigned int theHitPattern, unsigned int iSpare );
 
+  void setTrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int tanl, unsigned int z0, 
+		      unsigned int d0, unsigned int theChi2, unsigned int theBendChi2, 
+		      unsigned int theHitPattern, unsigned int iSpare );
+
 
   // getters for unpacked and converted values.  
   // These functions return real numbers converted from the digitized quantities using the LSB defined for each.
@@ -75,7 +79,7 @@ class TTTrack_TrackWord {
 
   void initialize();
 
-  unsigned int digitize_Signed(float var, unsigned int minBit, unsigned int maxBit, float lsb);
+  unsigned int digitize_Signed(float var, unsigned int maxBit, unsigned int minBit, float lsb);
 
   float unpack_Signed(unsigned int bits, unsigned int nBits, float lsb);
 

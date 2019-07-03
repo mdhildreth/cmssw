@@ -15,7 +15,7 @@ namespace StubPtConsistency {
     float speedOfLightConverted = CLHEP::c_light/1.0E5; // B*c/2E11 - converts q/pt to track angle at some radius from beamline
 
     // Need the pT signed in order to determine if bend is positive or negative
-    float trk_signedPt = speedOfLightConverted*mMagneticFieldStrength/aTrack.getRInv(nPar); // P(MeV/c) = (c/10^9)·Q·B(kG)·R(cm)
+    float trk_signedPt = speedOfLightConverted*mMagneticFieldStrength/aTrack.getRInv(); // P(MeV/c) = (c/10^9)·Q·B(kG)·R(cm)
 
     // loop over stubs
     const auto& stubRefs = aTrack.getStubRefs();

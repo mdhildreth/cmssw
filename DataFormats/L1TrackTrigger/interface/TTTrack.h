@@ -60,10 +60,12 @@ class TTTrack : public TTTrack_TrackWord
 
     /// Track momentum
     GlobalVector Momentum() const;
+    GlobalVector getMomentum() const;
     void         setMomentum( GlobalVector aMomentum);
 
     /// Track curvature
     double RInv() const;
+    double getRInv() const    { return RInv();}
     
     /// Track phi
     double phi() const;
@@ -84,10 +86,11 @@ class TTTrack : public TTTrack_TrackWord
 
     /// POCA
     GlobalPoint POCA() const;
-    void        setPOCA( GlobalPoint aPOCA );
+    GlobalPoint getPOCA() const   { return POCA();}
 
     /// Phi Sector
     unsigned int PhiSector() const                 { return thePhiSector; }
+    unsigned int getSector() const                 { return thePhiSector; }
     void         setPhiSector( unsigned int aSector ) { thePhiSector = aSector; }
 
     /// Track seeding (for debugging)
@@ -97,8 +100,10 @@ class TTTrack : public TTTrack_TrackWord
     
     /// Chi2
     double       Chi2() const;
-    double       Chi2Red() const;
-    void         setChi2( double aChi2 );
+    double       Chi2Red() const;   
+    double       getChi2() const           { return Chi2();}
+    double       getChi2Red() const        { return Chi2Red();}
+
 
     /// Stub Pt consistency
     double       StubPtConsistency() const;
@@ -266,15 +271,6 @@ double TTTrack< T >::z0() const {
 
 
 template< typename T >
-void TTTrack< T >::setPOCA(GlobalPoint aPOCA){
-
-  thePOCA=aPOCA;
-
-  return;
-
-}
-
-template< typename T >
 GlobalPoint TTTrack< T >::POCA() const
 {
 
@@ -282,20 +278,7 @@ GlobalPoint TTTrack< T >::POCA() const
     return thePOCA;
   }
   else return GlobalPoint(0.0,0.0,0.0);
-
 }
-
-/// Chi2 
-template< typename T >
-void TTTrack< T >::setChi2(double aChi2) {
-
-  theChi2=aChi2;
-
-  return;
-
-}
-
-
 
 /// Chi2 
 template< typename T >

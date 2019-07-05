@@ -23,12 +23,12 @@ TTTrack_TrackWord::TTTrack_TrackWord( const GlobalVector& Momentum, const Global
 
 }
 
-TTTrack_TrackWord::TTTrack_TrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int tanl, unsigned int z0, 
+TTTrack_TrackWord::TTTrack_TrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int eta, unsigned int z0, 
 				       unsigned int d0, unsigned int theChi2, unsigned int theBendChi2, 
 				       unsigned int theHitPattern, unsigned int iSpare ):
-  iRinv(theRinv),  // also wrong? double check
+  iRinv(theRinv), 
   iphi(phi0),
-  ieta(tanl),      //wrong! FIX
+  ieta(eta),     
   iz0(z0),
   id0(d0),
   ichi2(theChi2),  //revert to other packing?  Or will be unpacked wrong
@@ -41,12 +41,12 @@ TTTrack_TrackWord::TTTrack_TrackWord(  unsigned int theRinv, unsigned int phi0, 
 
 // one for already-digitized values:
 
-void TTTrack_TrackWord::setTrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int tanl, unsigned int z0, 
+void TTTrack_TrackWord::setTrackWord(  unsigned int theRinv, unsigned int phi0, unsigned int eta, unsigned int z0, 
 				       unsigned int d0, unsigned int theChi2, unsigned int theBendChi2, 
 				       unsigned int theHitPattern, unsigned int iSpare ) {
-  iRinv = theRinv;  // also wrong? double check
+  iRinv = theRinv; 
   iphi = phi0;
-  ieta = tanl;      //wrong! FIX
+  ieta = eta;      
   iz0 = z0;
   id0 = d0;
   ichi2 = theChi2;  //revert to other packing?  Or will be unpacked wrong
@@ -79,10 +79,10 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
   //eta
 
   std::cout << " digitizing eta " << NEtaBits << std::endl;
-  ieta = digitize_Signed(rEta,NEtaBits,0,LSBEta);
+  ieta = digitize_Signed(rEta,NEtaBits,0,valLSBEta);
 
   //z0
-  iz0 = digitize_Signed(rZ0,NZ0Bits,0,LSBZ0);
+  iz0 = digitize_Signed(rZ0,NZ0Bits,0,valLSBZ0);
 
   //chi2 has non-linear bins
   
@@ -96,14 +96,14 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
 
   //phi
   std::cout << " digitizing phi " << std::endl;
-  iphi = digitize_Signed(rPhi,NPhiBits,0,LSBPhi);
+  iphi = digitize_Signed(rPhi,NPhiBits,0,valLSBPhi);
 
   //d0
-  id0 = digitize_Signed(rD0,ND0Bits,0,LSBD0);
+  id0 = digitize_Signed(rD0,ND0Bits,0,valLSBD0);
 
   //Rinv
   std::cout << " digitizing Rinv " << std::endl;
-  iRinv = digitize_Signed(theRinv,NCurvBits,0,LSBCurv);
+  iRinv = digitize_Signed(theRinv,NCurvBits,0,valLSBCurv);
 
   //bend chi2 - non-linear bins
   iBendChi2 = 0;
@@ -129,7 +129,7 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
     uint word3 = 15 (pT) + 3 (bend chi2) + 14 (spare/TMVA) = 32 bits
    */
 
-  //now pack bits; leave hardcoded for now
+  //now pack bits; leave hardcoded for now as am example of how this could work
 
   seg1 = (ieta << 16);  //take care of word packing later...  
   seg2 = (iz0 << 4);
@@ -166,12 +166,12 @@ void TTTrack_TrackWord::setTrackWord( const GlobalVector& Momentum, const Global
 
 float TTTrack_TrackWord::unpack_ieta(){
   unsigned int bits =  (TrackWord1 & 0xFFFF0000) >> 16;
-  float unpEta = unpack_Signed(bits, NEtaBits, LSBEta);
+  float unpEta = unpack_Signed(bits, NEtaBits, valLSBEta);
   return unpEta;
 }
 
 float TTTrack_TrackWord::get_ieta(){
-  float unpEta = unpack_Signed(ieta, NEtaBits, LSBEta);
+  float unpEta = unpack_Signed(ieta, NEtaBits, valLSBEta);
   return unpEta;
 }
 
@@ -182,12 +182,12 @@ unsigned int TTTrack_TrackWord::get_etaBits(){
 
 float TTTrack_TrackWord::unpack_iz0(){
   unsigned int bits =   (TrackWord1 & 0x0000FFF0) >> 4;
-  float unpZ0 = unpack_Signed(bits, NZ0Bits, LSBZ0);
+  float unpZ0 = unpack_Signed(bits, NZ0Bits, valLSBZ0);
   return unpZ0;
 }
 
 float TTTrack_TrackWord::get_iz0(){
-  float unpZ0 = unpack_Signed(iz0, NZ0Bits, LSBZ0);
+  float unpZ0 = unpack_Signed(iz0, NZ0Bits, valLSBZ0);
   return unpZ0;
 }
 
@@ -214,12 +214,12 @@ unsigned int TTTrack_TrackWord::get_chi2Bits(){
 
 float TTTrack_TrackWord::unpack_iphi(){
   unsigned int bits =   (TrackWord2 & 0xFFF00000) >> 20;
-  float unpPhi = unpack_Signed(bits, NPhiBits, LSBPhi);
+  float unpPhi = unpack_Signed(bits, NPhiBits, valLSBPhi);
   return unpPhi;
 }
 
 float TTTrack_TrackWord::get_iphi(){
-  float unpPhi = unpack_Signed(iphi, NPhiBits, LSBPhi);
+  float unpPhi = unpack_Signed(iphi, NPhiBits, valLSBPhi);
   return unpPhi;
 }
 
@@ -230,12 +230,12 @@ unsigned int TTTrack_TrackWord::get_phiBits(){
 
 float TTTrack_TrackWord::unpack_id0(){
   unsigned int bits =   (TrackWord2 & 0x000FFF80) >> 7;
-  float unpD0 = unpack_Signed(bits, ND0Bits, LSBD0);
+  float unpD0 = unpack_Signed(bits, ND0Bits, valLSBD0);
   return unpD0;
 }
 
 float TTTrack_TrackWord::get_id0(){
-  float unpD0 = unpack_Signed(id0, ND0Bits, LSBD0);
+  float unpD0 = unpack_Signed(id0, ND0Bits, valLSBD0);
   return unpD0;
 }
 
@@ -255,12 +255,12 @@ unsigned int TTTrack_TrackWord::get_hitPattern(){
 
 float TTTrack_TrackWord::unpack_iRinv(){
   unsigned int bits =   (TrackWord3 & 0xFFFE0000) >> 17;
-  float unpCurv = unpack_Signed(bits, NCurvBits, LSBCurv);
+  float unpCurv = unpack_Signed(bits, NCurvBits, valLSBCurv);
   return unpCurv;
 }
 
 float TTTrack_TrackWord::get_iRinv(){
-  float unpCurv = unpack_Signed(iRinv, NCurvBits, LSBCurv);
+  float unpCurv = unpack_Signed(iRinv, NCurvBits, valLSBCurv);
   return unpCurv;
 }
 
@@ -292,7 +292,7 @@ unsigned int TTTrack_TrackWord::get_ispare(){
 unsigned int TTTrack_TrackWord::digitize_Signed(float var, unsigned int maxBit, unsigned int minBit, float lsb) {
   unsigned int nBits = (maxBit - minBit + 1);
   std::cout << " input " << var << std::endl;
-  std::cout << " nBits " << nBits << " LSB " << lsb << std::endl;
+  std::cout << " nBits " << nBits << " valLSB " << lsb << std::endl;
   unsigned int myVar = std::floor(fabs(var)/lsb);
   unsigned int maxVal = (1 << (nBits-1)) -1 ;
   std::cout << " maxVal " << maxVal << std::endl;
@@ -350,11 +350,11 @@ void TTTrack_TrackWord::initialize(){
   Nchi2    = (1<<NChi2Bits);
   NBchi2   = (1<<NBChi2Bits);
 
-  LSBCurv = maxCurv/float(CurvBins);
-  LSBPhi  = maxPhi/float(phiBins);
-  LSBEta  = maxEta/float(etaBins);
-  LSBZ0   = maxZ0/float(z0Bins);
-  LSBD0   = maxD0/float(d0Bins);
+  valLSBCurv = maxCurv/float(CurvBins);
+  valLSBPhi  = maxPhi/float(phiBins);
+  valLSBEta  = maxEta/float(etaBins);
+  valLSBZ0   = maxZ0/float(z0Bins);
+  valLSBD0   = maxD0/float(d0Bins);
 
   chi2Bins[0] = 0.25;
   chi2Bins[1] = 0.5;

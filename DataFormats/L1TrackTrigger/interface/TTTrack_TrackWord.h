@@ -100,11 +100,13 @@ class TTTrack_TrackWord {
   unsigned int TrackWord2;
   unsigned int TrackWord3;
 
-  float LSBCurv;
-  float LSBPhi;
-  float LSBEta;
-  float LSBZ0;
-  float LSBD0;
+  // values of least significant bit for digitization
+
+  float valLSBCurv;  
+  float valLSBPhi;
+  float valLSBEta;
+  float valLSBZ0;
+  float valLSBD0;
 
   float chi2Bins[16];
   float Bchi2Bins[8];

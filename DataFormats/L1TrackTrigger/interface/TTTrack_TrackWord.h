@@ -95,9 +95,30 @@ class TTTrack_TrackWord {
     TrackWord1      = word.TrackWord1; 
     TrackWord2	    = word.TrackWord2;	 
     TrackWord3      = word.TrackWord3;  
+  }
 
- }
- 
+  TTTrack_TrackWord& operator=(const TTTrack_TrackWord& word)
+  {
+    initialize();
+    iRinv           = word.iRinv;
+    iphi            = word.iphi;
+    ieta            = word.ieta;
+    iz0             = word.iz0;
+    id0             = word.id0;
+    ichi2           = word.ichi2;
+    iBendChi2       = word.iBendChi2;
+    ispare          = word.ispare;
+    iHitPattern     = word.iHitPattern;
+
+    // three 32-bit packed words                                                                                                                                   
+    TrackWord1      = word.TrackWord1;
+    TrackWord2      = word.TrackWord2;
+    TrackWord3      = word.TrackWord3;
+    
+    return *this;
+
+  } 
+
  private:
 
   void initialize();

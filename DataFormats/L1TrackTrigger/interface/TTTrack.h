@@ -61,19 +61,19 @@ class TTTrack : public TTTrack_TrackWord
     void setStubRefs( std::vector< edm::Ref< edmNew::DetSetVector< TTStub< T > >, TTStub< T > > > aStubs ) { theStubRefs = aStubs; }
 
     /// Track momentum
-    GlobalVector Momentum() const;
-    GlobalVector getMomentum() const;
+    GlobalVector momentum() const;
+    GlobalVector getMomentum( unsigned int npar ) const;
 
 
     /// Track curvature
-    double RInv() const;
-    double getRInv() const;
+    double rInv() const;
+    double getRInv( unsigned int npar ) const;
     
     /// Track phi
     double phi() const;
 
     /// Track tanL
-    double TanL() const;
+    double tanL() const;
     
     /// Track d0
     double d0() const;
@@ -86,7 +86,7 @@ class TTTrack : public TTTrack_TrackWord
 
     /// POCA
     GlobalPoint POCA() const;
-    GlobalPoint getPOCA() const;
+    GlobalPoint getPOCA( unsigned int npar ) const;
 
     /// Phi Sector
     unsigned int PhiSector() const                 { return thePhiSector; }
@@ -99,10 +99,10 @@ class TTTrack : public TTTrack_TrackWord
     
     
     /// Chi2
-    double       Chi2() const;
-    double       Chi2Red() const;   
-    double       getChi2() const;
-    double       getChi2Red() const;
+    double       chi2() const;
+    double       chi2Red() const;   
+    double       getChi2( unsigned int npar ) const;
+    double       getChi2Red( unsigned int npar ) const;
 
 
     /// Stub Pt consistency
@@ -195,7 +195,7 @@ void TTTrack< T >::setFitParNo(unsigned int nPar) {
 // the unpacked values must come from the TTTrack_Trackword member functions.
 
 template< typename T >
-GlobalVector TTTrack< T >::Momentum() const{
+GlobalVector TTTrack< T >::momentum() const{
 
   if (NumFitPars==5 || NumFitPars ==4) {
     return theMomentum;
@@ -205,14 +205,14 @@ GlobalVector TTTrack< T >::Momentum() const{
 } 
 
 template< typename T >
-GlobalVector TTTrack< T >::getMomentum() const{
+GlobalVector TTTrack< T >::getMomentum( unsigned int npar ) const{
 
-    return Momentum();
+    return momentum();
 
 } 
 
 template< typename T >
-double TTTrack< T >::RInv() const {
+double TTTrack< T >::rInv() const {
 
   if (NumFitPars==5 || NumFitPars ==4) {
     return theRInv;
@@ -222,13 +222,13 @@ double TTTrack< T >::RInv() const {
 }
 
 template< typename T >
-double TTTrack< T >::getRInv() const { //backwards compatibility
+double TTTrack< T >::getRInv( unsigned int npar ) const { //backwards compatibility
 
-    return RInv();
+    return rInv();
 }
 
 template< typename T >
-double TTTrack< T >::TanL() const {
+double TTTrack< T >::tanL() const {
 
   if (NumFitPars==5 || NumFitPars ==4) {
     return theTanL;
@@ -288,14 +288,14 @@ GlobalPoint TTTrack< T >::POCA() const
 }
 
 template< typename T >
-GlobalPoint TTTrack< T >::getPOCA() const  //backwards compatibility
+GlobalPoint TTTrack< T >::getPOCA( unsigned int npar ) const  //backwards compatibility
 {
   return POCA();
 }
 
 /// Chi2 
 template< typename T >
-double TTTrack< T >::Chi2() const
+double TTTrack< T >::chi2() const
 {
 
   if (NumFitPars==5 || NumFitPars ==4) {
@@ -306,16 +306,16 @@ double TTTrack< T >::Chi2() const
 }
 
 template< typename T >
-double TTTrack< T >::getChi2() const   //backwards compatibility 
+double TTTrack< T >::getChi2( unsigned int npar ) const   //backwards compatibility 
 {
-  return Chi2();
+  return chi2();
 }
 
 
 
 /// Chi2 reduced
 template< typename T >
-double TTTrack< T >::Chi2Red() const
+double TTTrack< T >::chi2Red() const
 {
 
   if (NumFitPars==5 || NumFitPars ==4) {
@@ -326,9 +326,9 @@ double TTTrack< T >::Chi2Red() const
 }
 
 template< typename T >
-double TTTrack< T >::getChi2Red() const  //backwards compatibility 
+double TTTrack< T >::getChi2Red( unsigned int npar ) const  //backwards compatibility 
 {
-  return Chi2Red();
+  return chi2Red();
 }
 
 
